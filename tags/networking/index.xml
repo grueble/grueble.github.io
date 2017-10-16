@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Networking on Will Gueble</title>
+    <link>https://grueble.github.io/tags/networking/</link>
+    <description>Recent content in Networking on Will Gueble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <copyright>Copyright © 2017 Will Gueble. All Rights Reserved.</copyright>
+    <lastBuildDate>Tue, 13 Jun 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://grueble.github.io/tags/networking/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Networked Multiplayer</title>
+      <link>https://grueble.github.io/posts/networked-multiplayer/</link>
+      <pubDate>Tue, 13 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/networked-multiplayer/</guid>
+      <description>With the core Standoff application under my belt, I was finally able to move on to the networking portion of the game’s development. I gravitated towards working with network sockets in part due to my background using them at my previous job. The Standoff application never necessitated a complex implementation of networking - a simple buffer of bits suffices to transmit any message between client and server. Messages rarely exceed a byte in size, and only when asked to display a game name of considerable length.</description>
+    </item>
+    
+  </channel>
+</rss>

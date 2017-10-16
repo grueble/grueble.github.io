@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:site_name" content="Analog Dreamer" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Game Logic" />
+    <meta property="og:url" content="/posts/game-logic/" />
+    <meta property="og:image" content="http://scotthurlow.com/public/website.png" />
+
+    
+    <meta name="description" content="Blog &amp; Portfolio Website">
+    
+
+    <title>Game Logic | Will Gueble</title>
+
+    <link rel="stylesheet" href="https://grueble.github.io/css/style.css" />
+    <link rel="stylesheet" href="https://grueble.github.io/css/fonts.css" />
+
+    <header>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/">/home/will gueble</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/posts/">~/archive</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/about/">~/about</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/resume/">~/résumé</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+
+<div class="article-meta">
+
+   <h1>
+      <span class="title">
+         Game Logic
+      </span>
+   </h1>
+
+   
+      <h2 class="author">
+        Will Gueble
+      </h2>
+   
+
+   
+      <h2 class="date">
+         2017/06/12
+      </h2>
+   
+
+   <p class="terms">
+      
+         
+            Categories: 
+               <a href="https://grueble.github.io/categories/standoff">
+                  Standoff
+               </a> 
+            
+         
+      
+         
+            Tags: 
+               <a href="https://grueble.github.io/tags/game-development">
+                  Game Development
+               </a> 
+            
+         
+      
+   </p>
+</div>
+
+
+
+<main>
+   <p>In order to capture all of the capabilities outlined in my design, I began development with a ‘Piece’ class to handle ownership of all the relevant spatial and qualitative traits. This class is responsible for executing all actions available to pieces, and provides a layer of protection for critical data about the game’s state - piece’s are only accessed or altered through the available public methods.</p>
+
+<p>The Standoff project was my first foray into memory management on such a large scale, so I wanted to use it as an opportunity to experiment with different techniques for encapsulating the lifetime of an object. I struggled for a regrettably long time with misplaced attempts to represent the pieces as a vector of pointers, but these proved futile in the long run. I settled on using STL’s smart pointers, introduced in C++11. Although this option is syntactically quite elegant, it’s inefficiency makes it less than ideal for use in game applications. Luckily, Standoff is lightweight enough that performance maximization was unnecessary; in the future I would return to this problem for an exercise in measuring and improving my game’s boot time. [1]</p>
+
+<p>One of the perks of the piece-centric approach is the ability to get by without any concept of a ‘Player’. Almost all data about the game is described by two vectors containing all of the pieces - one for each player. There is no need for a concept of a persistent user either; each ‘Player’ exists only as a collection of associated pieces. In the networked version of the game, a particular game client is tied to a set of pieces based on the order in which it enters the game, with the game creator always controlling the collection labelled as “Player 1”. As a bonus, this meant that I could enable online play without having to set up a database to manage users and their data, nor would i have to invest in securing this data from outside attacks.</p>
+
+<hr>
+
+<p><img src="https://grueble.github.io/img/standoff-move.gif" alt="Move" /></p>
+
+<p>With the pieces defined and initialized, I began work on algorithms for the fundamental actions available to a player on their turn - move, deploy, rotate, and shootout. As a deployment is just a special case of the move action, I was able to condense these capabilities down into three methods. Of the three, the shootout function is the most notable; both Game_c::move() and rotate() simply serve to validate and store any relevant data about the move, before passing it along to the piece in question.</p>
+
+<p><img src="https://grueble.github.io/img/standoff-rotate.gif" alt="Rotate" /></p>
+
+<p>Shootout, on the other hand, is a whole different beast. By far the most complicated subroutine of the game’s core mechanics, I decided to split the functionality of a shootout into two separate functions, Game_c::shootout and detectHit.</p>
+
+<pre><code class="language-c++">void shootout() {
+   std::vector&lt;PiecePtr&gt; live_pieces;
+   std::vector&lt;PiecePtr&gt; hit_pieces;
+   
+   std::vector&lt;PiecePtr&gt;::iterator p1_it;
+   for (p1_it = mPlayer1Pieces.begin(); p1_it != mPlayer1Pieces.end(); ++p1_it)
+   {
+      if ((*p1_it)-&gt;getPlayState() == Piece_n::LIVE)
+      {
+         live_pieces.push_back(*p1_it);
+      }
+   }
+   
+   // copy construct pointers to Player 2's live pieces...
+   
+   std::vector&lt;PiecePtr&gt;::iterator it;
+   for (it = live_pieces.begin(); it != live_pieces.end(); ++it)
+   {
+      if ((*it)-&gt;getPieceType() != Piece_n::PAWN)
+      {
+         Piece_n::Direction_e direction = (*it)-&gt;getDirection();
+         detectHit2(**it, direction, live_pieces);
+   
+         if ((*it)-&gt;getPieceType() == Piece_n::SLINGER)
+         {
+            Piece_n::Direction_e secondary_direction;
+            switch(direction)
+            {
+               case Piece_n::UP : { secondary_direction = Piece_n::RIGHT; }
+               case Piece_n::DOWN : { secondary_direction = Piece_n::LEFT; }
+               case Piece_n::LEFT : { secondary_direction = Piece_n::UP; }
+               case Piece_n::RIGHT : { secondary_direction = Piece_n::DOWN; }
+            }
+            detectHit2(**it, secondary_direction, live_pieces);
+         } } } }
+</code></pre>
+
+<p>Since a shootout can be initiated by either player during their turn, the shootout function is necessarily player agnostic. A record of all pieces hit during the process is stored as a vector of pairs of the form ( Player #, Index ), where the index is such that it can be passed to the vector::at function to return the corresponding piece for the corresponding player. However, I still needed an algorithm to realize this formulation as my proof of correctness.</p>
+
+<pre><code class="language-c++">// method declaration
+void Game_c::detectHit2(Piece_n::Piece_c&amp; piece, 
+                        Piece_n::Direction_e direction,
+                        std::vector&lt;PiecePtr&gt;&amp; pieces)
+
+std::vector&lt;PiecePtr&gt;::iterator it;
+for (it = pieces.begin(); it != pieces.end(); ++it)
+{ 
+   switch (direction)
+   {
+      case Piece_n::UP :
+      {
+         std::vector&lt;PiecePtr&gt;::iterator it;
+         for (it = pieces.begin(); it != pieces.end(); ++it)
+         {
+            if ((*it)-&gt;getPlayState() == Piece_n::LIVE)
+            {
+               if ((*it)-&gt;getPosition().first == piece.getPosition().first &amp;&amp;
+                   (*it)-&gt;getPosition().second &lt; piece.getPosition().second)
+               {
+                  if (hit_piece_flag &amp;&amp;
+                     (*it)-&gt;getPosition().second &gt; hit_piece-&gt;getPosition().second) {
+                     hit_piece = *it;
+                  }
+                  else {
+                     hit_piece = *it;
+                     hit_piece_flag = true;
+                  } } } }
+         break;
+      }
+      // cases for all possible piece directions...
+   } 
+}
+
+if (piece.getTeam() != hit_piece-&gt;getTeam())
+{
+   hit_piece-&gt;nextPlayState();
+}
+</code></pre>
+
+<p>To this end, I wrote the detectHit method, a helper for the more generalized shootout process. During each iteration of the shootout method, detectHit is called if and only if the piece is both in play and capable of shooting. This function takes a reference to a piece, a firing direction, and a reference to a list of pieces to check for a collision. Using this information, it draws a collision ray in the desired direction, checking for hits with each of the pieces stored in the list parameter. This list is determined by the shootout function, which passes the piece vector belonging to the shooter’s opponent. To account for the possibility of multiple hits in the same direction, the detectHit routine only returns the index of the nearest hit piece, determined by an absolute value comparison along each piece’s relevant axis. In case the shooting piece is a ‘slinger’ - the type of piece capable of firing in two directions - a second call is made to detectHit, passing the piece’s secondary direction instead. In the final step of the process, the shootout algorithm sets each of the hit pieces to the ‘DEAD’ play state, rendering them invisible to the application for all intensive purposes.</p>
+
+<p><img src="https://grueble.github.io/img/standoff-shootout.gif" alt="Shootout" /></p>
+
+</main>
+
+
+   <div class="navigation">
+      <div class="container">
+         
+            <div class="icon">
+               <img class="icon" src="https://grueble.github.io/img/back.svg" alt="back" />
+            </div>
+            <div class="prev">
+               <a href="https://grueble.github.io/posts/design/">
+                  Design
+               </a>
+            </div>
+         
+      </div>
+      | | |
+      <div class="container">   
+         
+            <div class="next">
+               <a href="https://grueble.github.io/posts/graphics-w-sdl/">
+                  Graphics with SDL
+               </a>
+            </div>
+            <div class="icon">
+               <img class="icon" src="https://grueble.github.io/img/next.svg" alt="next" />
+            </div>
+         
+      </div>
+   </div>
+
+
+    <footer>
+
+      <hr/>
+
+      <div class="container">
+
+      <div class="copyright">
+        Copyright © 2017 Will Gueble. All Rights Reserved.
+      </div>
+
+      <div class="icons">
+
+        
+           <a href="mailto:will.gueble@gmail.com">
+              <img class="icon" src="https://grueble.github.io/img/email.svg" alt="email" />
+           </a>
+        
+  
+        
+           <a href="https://github.com/grueble" target="_blank">
+              <img class="icon" src="https://grueble.github.io/img/github.svg" alt="github" />
+           </a>
+        
+  
+        
+           <a href="https://www.linkedin.com/in/will-gueble-2b0b8850" target="_blank">
+              <img class="icon" src="https://grueble.github.io/img/linkedin.svg" alt="linkedin" />
+           </a>
+        
+
+      </div>
+
+      
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+  <script src="https://grueble.github.io/js/highlight.min.js" defer></script>
+
+
+      
+    </footer>
+  </body>
+</html>

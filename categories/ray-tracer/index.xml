@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ray Tracer on Will Gueble</title>
+    <link>https://grueble.github.io/categories/ray-tracer/</link>
+    <description>Recent content in Ray Tracer on Will Gueble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <copyright>Copyright © 2017 Will Gueble. All Rights Reserved.</copyright>
+    <lastBuildDate>Thu, 28 Sep 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://grueble.github.io/categories/ray-tracer/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Ray-Tracer</title>
+      <link>https://grueble.github.io/posts/ray-tracer/</link>
+      <pubDate>Thu, 28 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/ray-tracer/</guid>
+      <description>When my computer was stolen back in early 2016, I lost almost all of my files from the days of my undergraduate studies. It wasn&amp;rsquo;t until recently, with all of time I&amp;rsquo;ve spent familiarizing myself with OpenGL, that I decided to attempt to reconstruct my years-old Computer Graphics project.
+The original application ran on a 32-bit Linux VM, so I knew that it would take a little bit of tinkering to compile and run on my machine.</description>
+    </item>
+    
+  </channel>
+</rss>

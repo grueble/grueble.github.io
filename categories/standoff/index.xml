@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Standoff on Will Gueble</title>
+    <link>https://grueble.github.io/categories/standoff/</link>
+    <description>Recent content in Standoff on Will Gueble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <copyright>Copyright © 2017 Will Gueble. All Rights Reserved.</copyright>
+    <lastBuildDate>Tue, 13 Jun 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://grueble.github.io/categories/standoff/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Application Logic</title>
+      <link>https://grueble.github.io/posts/application-logic/</link>
+      <pubDate>Tue, 13 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/application-logic/</guid>
+      <description>I now had code written for both the game logic and graphics capabilities, so it was time to put the finishing touches on my application’s first draft. The ‘StandoffApp’ class encapsulates this functionality, marrying together all of the disparate pieces that I had already developed. LazyFoo’s tutorial series proved to be essential once again, this time providing me with a structural template on which to base my SDL_Event input handling loop.</description>
+    </item>
+    
+    <item>
+      <title>Networked Multiplayer</title>
+      <link>https://grueble.github.io/posts/networked-multiplayer/</link>
+      <pubDate>Tue, 13 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/networked-multiplayer/</guid>
+      <description>With the core Standoff application under my belt, I was finally able to move on to the networking portion of the game’s development. I gravitated towards working with network sockets in part due to my background using them at my previous job. The Standoff application never necessitated a complex implementation of networking - a simple buffer of bits suffices to transmit any message between client and server. Messages rarely exceed a byte in size, and only when asked to display a game name of considerable length.</description>
+    </item>
+    
+    <item>
+      <title>Game Logic</title>
+      <link>https://grueble.github.io/posts/game-logic/</link>
+      <pubDate>Mon, 12 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/game-logic/</guid>
+      <description>In order to capture all of the capabilities outlined in my design, I began development with a ‘Piece’ class to handle ownership of all the relevant spatial and qualitative traits. This class is responsible for executing all actions available to pieces, and provides a layer of protection for critical data about the game’s state - piece’s are only accessed or altered through the available public methods.
+The Standoff project was my first foray into memory management on such a large scale, so I wanted to use it as an opportunity to experiment with different techniques for encapsulating the lifetime of an object.</description>
+    </item>
+    
+    <item>
+      <title>Graphics with SDL</title>
+      <link>https://grueble.github.io/posts/graphics-w-sdl/</link>
+      <pubDate>Mon, 12 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/graphics-w-sdl/</guid>
+      <description>With a rough version of the game’s core mechanics in hand, I arrived at the first major hurdle of my development process - integration of a graphics API. It wouldn’t have made sense to invest any more time in iterating through mechanical variations on the main loop without a fully testable prototype; debugging with the command line can only take you so far. After some deliberation, I settled on the latest version of Simple DirectMedia Layer development library (SDL 2.</description>
+    </item>
+    
+    <item>
+      <title>Design</title>
+      <link>https://grueble.github.io/posts/design/</link>
+      <pubDate>Sat, 10 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/design/</guid>
+      <description>Early in the design process, I turned to the chess programming community for inspiration on how to structure my game’s logic. I quickly encountered a slew of different strategies, but the debate between piece-based vs. board-based representation caught my eye. In the former, data about the game state is stored as a collection of pieces; in the latter, the data is formatted as a 2D array of tiles. Both options provide a similar degree of expressiveness and flexibility, so the decision came down to contextual requirements in the end.</description>
+    </item>
+    
+  </channel>
+</rss>

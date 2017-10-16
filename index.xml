@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Home on Will Gueble</title>
+    <link>https://grueble.github.io/</link>
+    <description>Recent content in Home on Will Gueble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <copyright>Copyright © 2017 Will Gueble. All Rights Reserved.</copyright>
+    <lastBuildDate>Thu, 28 Sep 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://grueble.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Ray-Tracer</title>
+      <link>https://grueble.github.io/posts/ray-tracer/</link>
+      <pubDate>Thu, 28 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/ray-tracer/</guid>
+      <description>When my computer was stolen back in early 2016, I lost almost all of my files from the days of my undergraduate studies. It wasn&amp;rsquo;t until recently, with all of time I&amp;rsquo;ve spent familiarizing myself with OpenGL, that I decided to attempt to reconstruct my years-old Computer Graphics project.
+The original application ran on a 32-bit Linux VM, so I knew that it would take a little bit of tinkering to compile and run on my machine.</description>
+    </item>
+    
+    <item>
+      <title>Application Logic</title>
+      <link>https://grueble.github.io/posts/application-logic/</link>
+      <pubDate>Tue, 13 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/application-logic/</guid>
+      <description>I now had code written for both the game logic and graphics capabilities, so it was time to put the finishing touches on my application’s first draft. The ‘StandoffApp’ class encapsulates this functionality, marrying together all of the disparate pieces that I had already developed. LazyFoo’s tutorial series proved to be essential once again, this time providing me with a structural template on which to base my SDL_Event input handling loop.</description>
+    </item>
+    
+    <item>
+      <title>Networked Multiplayer</title>
+      <link>https://grueble.github.io/posts/networked-multiplayer/</link>
+      <pubDate>Tue, 13 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/networked-multiplayer/</guid>
+      <description>With the core Standoff application under my belt, I was finally able to move on to the networking portion of the game’s development. I gravitated towards working with network sockets in part due to my background using them at my previous job. The Standoff application never necessitated a complex implementation of networking - a simple buffer of bits suffices to transmit any message between client and server. Messages rarely exceed a byte in size, and only when asked to display a game name of considerable length.</description>
+    </item>
+    
+    <item>
+      <title>Game Logic</title>
+      <link>https://grueble.github.io/posts/game-logic/</link>
+      <pubDate>Mon, 12 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/game-logic/</guid>
+      <description>In order to capture all of the capabilities outlined in my design, I began development with a ‘Piece’ class to handle ownership of all the relevant spatial and qualitative traits. This class is responsible for executing all actions available to pieces, and provides a layer of protection for critical data about the game’s state - piece’s are only accessed or altered through the available public methods.
+The Standoff project was my first foray into memory management on such a large scale, so I wanted to use it as an opportunity to experiment with different techniques for encapsulating the lifetime of an object.</description>
+    </item>
+    
+    <item>
+      <title>Graphics with SDL</title>
+      <link>https://grueble.github.io/posts/graphics-w-sdl/</link>
+      <pubDate>Mon, 12 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/graphics-w-sdl/</guid>
+      <description>With a rough version of the game’s core mechanics in hand, I arrived at the first major hurdle of my development process - integration of a graphics API. It wouldn’t have made sense to invest any more time in iterating through mechanical variations on the main loop without a fully testable prototype; debugging with the command line can only take you so far. After some deliberation, I settled on the latest version of Simple DirectMedia Layer development library (SDL 2.</description>
+    </item>
+    
+    <item>
+      <title>Design</title>
+      <link>https://grueble.github.io/posts/design/</link>
+      <pubDate>Sat, 10 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/design/</guid>
+      <description>Early in the design process, I turned to the chess programming community for inspiration on how to structure my game’s logic. I quickly encountered a slew of different strategies, but the debate between piece-based vs. board-based representation caught my eye. In the former, data about the game state is stored as a collection of pieces; in the latter, the data is formatted as a 2D array of tiles. Both options provide a similar degree of expressiveness and flexibility, so the decision came down to contextual requirements in the end.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>https://grueble.github.io/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/about/</guid>
+      <description>UNDER CONSTRUCTION!!! Should be posted by the end of Oct. 16</description>
+    </item>
+    
+    <item>
+      <title>Résumé</title>
+      <link>https://grueble.github.io/resume/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/resume/</guid>
+      <description>Will Gueble Download: pdf  Education Wesleyan University | Middletown, CT | Sept. 2011 – May 2015  Bachelor of Arts in Computer Science and Philosophy, May 2015. GPA: 3.5 Selected Undergraduate Coursework: Computer Graphics, Algorithms, Automata Theory, Computer Structure, Data Structures, Vectors &amp;amp; Matrices, Writing About Video Games 
+ Experience Software Engineer | SRC Inc. | Dec. 2016 – Jan. 2017  Wrote bit-buffer translators to handle several new modes of communication between an embedded hardware platform and its connected software GUI applications.</description>
+    </item>
+    
+  </channel>
+</rss>

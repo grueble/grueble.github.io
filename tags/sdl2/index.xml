@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Sdl2 on Will Gueble</title>
+    <link>https://grueble.github.io/tags/sdl2/</link>
+    <description>Recent content in Sdl2 on Will Gueble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <copyright>Copyright © 2017 Will Gueble. All Rights Reserved.</copyright>
+    <lastBuildDate>Mon, 12 Jun 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://grueble.github.io/tags/sdl2/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Graphics with SDL</title>
+      <link>https://grueble.github.io/posts/graphics-w-sdl/</link>
+      <pubDate>Mon, 12 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/graphics-w-sdl/</guid>
+      <description>With a rough version of the game’s core mechanics in hand, I arrived at the first major hurdle of my development process - integration of a graphics API. It wouldn’t have made sense to invest any more time in iterating through mechanical variations on the main loop without a fully testable prototype; debugging with the command line can only take you so far. After some deliberation, I settled on the latest version of Simple DirectMedia Layer development library (SDL 2.</description>
+    </item>
+    
+  </channel>
+</rss>

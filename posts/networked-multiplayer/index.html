@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:site_name" content="Analog Dreamer" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Networked Multiplayer" />
+    <meta property="og:url" content="/posts/networked-multiplayer/" />
+    <meta property="og:image" content="http://scotthurlow.com/public/website.png" />
+
+    
+    <meta name="description" content="Blog &amp; Portfolio Website">
+    
+
+    <title>Networked Multiplayer | Will Gueble</title>
+
+    <link rel="stylesheet" href="https://grueble.github.io/css/style.css" />
+    <link rel="stylesheet" href="https://grueble.github.io/css/fonts.css" />
+
+    <header>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/">/home/will gueble</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/posts/">~/archive</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/about/">~/about</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/resume/">~/résumé</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+
+<div class="article-meta">
+
+   <h1>
+      <span class="title">
+         Networked Multiplayer
+      </span>
+   </h1>
+
+   
+      <h2 class="author">
+        Will Gueble
+      </h2>
+   
+
+   
+      <h2 class="date">
+         2017/06/13
+      </h2>
+   
+
+   <p class="terms">
+      
+         
+            Categories: 
+               <a href="https://grueble.github.io/categories/standoff">
+                  Standoff
+               </a> 
+            
+         
+      
+         
+            Tags: 
+               <a href="https://grueble.github.io/tags/game-development">
+                  Game Development
+               </a> 
+            
+               <a href="https://grueble.github.io/tags/networking">
+                  Networking
+               </a> 
+            
+         
+      
+   </p>
+</div>
+
+
+
+<main>
+   <p>With the core Standoff application under my belt, I was finally able to move on to the networking portion of the game’s development. I gravitated towards working with network sockets in part due to my background using them at my previous job. The Standoff application never necessitated a complex implementation of networking - a simple buffer of bits suffices to transmit any message between client and server. Messages rarely exceed a byte in size, and only when asked to display a game name of considerable length. The <em>User Datagram Protocol</em> (UDP) provides the kind of low-latency gameplay that we have come to expect from networked games, additionally serving as a flexible and low-level foundation for future iterations of my model.</p>
+
+<p>Luckily, I was able to locate another tutorial series to aid in my development process - this time provided by the blog “Gaffer on Games” (<a href="http://gafferongames.com/networking-for-game-programmers/">http://gafferongames.com/networking-for-game-programmers/</a>). Glenn Fiedler’s tutorials feature an in-depth look at the construction of a platform-agnostic model for virtual connection, which I distilled into the raw client-server approach featured in the completed Standoff application.</p>
+
+<pre><code class="language-c++">// basic serialization
+unsigned char* packet = new unsigned char[MAX_PACKET_SIZE + HEADER_SIZE];
+packet[0] = (unsigned char)(mProtocolId &gt;&gt; 24);
+packet[1] = (unsigned char)((mProtocolId &gt;&gt; 16) &amp; 0xFF);
+packet[2] = (unsigned char)((mProtocolId &gt;&gt; 8) &amp; 0xFF);
+packet[3] = (unsigned char)((mProtocolId) &amp; 0xFF);
+
+std::memcpy(&amp;packet[HEADER_SIZE], data, MAX_PACKET_SIZE);
+bool ret_val = 
+   mSocket.send(to_address, packet, MAX_PACKET_SIZE + HEADER_SIZE);
+</code></pre>
+
+<pre><code class="language-c++">// basic deserialization
+unsigned char* packet = new unsigned char[MAX_PACKET_SIZE + HEADER_SIZE];
+int bytes_read = 
+   mSocket.receive(from_address, packet, MAX_PACKET_SIZE + HEADER_SIZE);
+std::memcpy(data, &amp;packet[HEADER_SIZE], MAX_PACKET_SIZE);
+</code></pre>
+
+<p>I divided my networking module into three parts: at the top-level, the ‘ConnectHandler’ class presides over startup and shutdown of the connection process, in addition to performing a set of serialization and deserialization transformations on every sent message. A ConnectHandler_c object owns an ‘LSocket’, a wrapper class designed in the style of the ‘LTexture’ class used in my project’s graphics module. An LSocket contains platform-specific implementations for the raw network socket, and encapsulates the socket’s life cycle as well as capabilities such as sending and receiving. Last but not least is the ‘Address’ class, which stores any data required to connect with a particular device - be it client or server. Development for each of these parts relied in no small part on the aforementioned tutorials by Fiedler. His posts are more informative than anything I could write on the subject, with the first two entries of his <em>Networking for Game Programmers</em> series proving the most informative.</p>
+
+<hr>
+
+<p><img src="https://grueble.github.io/img/standoff-server-output.gif" alt="Server Output" /></p>
+
+<p>The next step of my development process involved the construction of both client and server endpoints for my networking pipeline. These new modules were designed to leverage the completed ConnectHandler_c in order to establish a network connection between two separate instances of the Standoff application. ???</p>
+
+<pre><code class="language-c++">enum Request_e
+{
+   INVALID = 0,
+   CREATE_GAME = 1,
+   FIND_GAMES = 2,
+   JOIN_GAME = 3,
+   MOVE_ACTION = 4,
+   SHOOTOUT = 5
+};
+</code></pre>
+
+<p>Communication between the server and each client is facilitated via delivery and receipt of “requests”. The ‘StandoffClient’ class only deals in messages of one of 5 types, as delineated by the Request_e enumeration. Each bitstream message begins with an integer representing the type of request that it contains. Upon receiving a message, the ‘StandoffServer’ class reacts in one of the following ways:</p>
+
+<ul>
+<li><p>CREATE_GAME: push a new game onto the list of active games, with the address of the sender linked to Player 1. Additionally, StandoffServer_c assigns each game a unique ID upon creation.</p></li>
+
+<li><p>FIND_GAMES: for each active game, reply to the sender with a message containing the game’s relevant data.</p></li>
+
+<li><p>JOIN_GAME: if the message contains the ID of an open game, close that game and link the address of the sender to Player 2.</p></li>
+
+<li><p>MOVE_ACTION: deserialize the move and check it against the saved game state, applying it on a successful validation; pass the message along to the game’s other player.</p></li>
+
+<li><p>SHOOTOUT: call a shootout on the server’s stored copy of the sender’s game; pass the message along to the game’s other player.</p></li>
+</ul>
+
+<p>Available actions correspond with the enumerators of Request_e, with the exception of the INVALID request identifier.</p>
+
+<hr>
+
+<pre><code class="language-c++">// from: StandoffApp_c::update()
+switch (mCurrentGame.getCurrentMove().mCurrentAction)
+{
+   case Game_n::MOVE :
+   case Game_n::DEPLOY :
+   case Game_n::ROTATE :
+   {
+      data[0] = 4; // Request_e::MOVE_ACTION
+      data[1] = mCurrentGame.getCurrentMove().mPrevPosition.first;
+      data[2] = mCurrentGame.getCurrentMove().mPrevPosition.second;
+      data[3] = mCurrentGame.getCurrentMove().mMovedPiece-&gt;getPosition().first;
+      data[4] = mCurrentGame.getCurrentMove().mMovedPiece-&gt;getPosition().second;
+      data[5] = 
+         static_cast&lt;int&gt;(mCurrentGame.getCurrentMove().mMovedPiece-&gt;getDirection());
+      send_flag = true;
+      break;
+   }
+   case Game_n::SHOOTOUT :
+   {
+      data[0] = 5; // Request_e::SHOOTOUT
+      send_flag = true;
+      break;
+   } }
+</code></pre>
+
+<p>With the client now built as a layer around the original ‘StandoffApp’ class, I needed to implement some changes to bring the old application logic up to speed. In order to facilitate a client’s communication with the server, I added a methods for sending and receiving request messages - StandoffApp_c::update and listen, respectively. The StandoffApp only needs to handle MOVE_ACTION and SHOOTOUT messages, as the remaining messages are only used prior to a game’s start. Since move, deploy, and rotate actions are all stored identically in the form of a ‘Move’ structure, the server can apply each MOVE_ACTION request in the same way, resulting in cleaner code all around.</p>
+
+<pre><code class="language-c++">// from: StandoffApp_c::listen()
+if (mConnectHandler.receiveData(mServerAddress, data) &gt; 0) 
+{
+   receive_complete = true;
+   switch(static_cast&lt;ConnectHandler_n::Request_e&gt;(data[0]))
+   {
+      case ConnectHandler_n::MOVE_ACTION :
+      {
+         std::pair&lt;int, int&gt; start_position = 
+            std::make_pair((int)data[1], (int)data[2]);
+
+         const std::vector&lt;Game_n::PiecePtr&gt;&amp; pieces = 
+            (mCurrentGame.mCurrentTurn % 2) ? mCurrentGame.getPlayer1Pieces()
+                                            : mCurrentGame.getPlayer2Pieces();
+
+         std::vector&lt;Game_n::PiecePtr&gt;::const_iterator it;
+         for (it = pieces.begin(); it != pieces.end(); ++it)
+         {
+            if ((*it)-&gt;getPosition() == start_position 
+                &amp;&amp; (*it)-&gt;getPlayState() != Piece_n::DEAD)
+            {
+               mCurrentGame.setCurrentPiece(*it);
+               mCurrentGame.move(std::make_pair((int)data[3], (int)data[4]));
+               mCurrentGame.rotate(static_cast&lt;Piece_n::Direction_e&gt;(data[5]));
+               mCurrentGame.nextPlayer();
+            }
+         }
+         break;
+      }
+      case ConnectHandler_n::SHOOTOUT :
+      {
+         mCurrentGame.shootout2();
+         mCurrentGame.nextPlayer();
+         break;
+      } } }
+</code></pre>
+
+<hr>
+
+<p>Given the types of issues common to most networked multiplayer games, I was understandably worried about the security of my application, especially because of my intent to distribute Standoff amongst my friends. Based on my decision to use a bit buffer for message transmission, my main concern was the possibility of a buffer overflow allowing for an attacker to seize control of the program’s execution. [3]</p>
+
+</main>
+
+
+   <div class="navigation">
+      <div class="container">
+         
+            <div class="icon">
+               <img class="icon" src="https://grueble.github.io/img/back.svg" alt="back" />
+            </div>
+            <div class="prev">
+               <a href="https://grueble.github.io/posts/application-logic/">
+                  Application Logic
+               </a>
+            </div>
+         
+      </div>
+      | | |
+      <div class="container">   
+         
+      </div>
+   </div>
+
+
+    <footer>
+
+      <hr/>
+
+      <div class="container">
+
+      <div class="copyright">
+        Copyright © 2017 Will Gueble. All Rights Reserved.
+      </div>
+
+      <div class="icons">
+
+        
+           <a href="mailto:will.gueble@gmail.com">
+              <img class="icon" src="https://grueble.github.io/img/email.svg" alt="email" />
+           </a>
+        
+  
+        
+           <a href="https://github.com/grueble" target="_blank">
+              <img class="icon" src="https://grueble.github.io/img/github.svg" alt="github" />
+           </a>
+        
+  
+        
+           <a href="https://www.linkedin.com/in/will-gueble-2b0b8850" target="_blank">
+              <img class="icon" src="https://grueble.github.io/img/linkedin.svg" alt="linkedin" />
+           </a>
+        
+
+      </div>
+
+      
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+  <script src="https://grueble.github.io/js/highlight.min.js" defer></script>
+
+
+      
+    </footer>
+  </body>
+</html>

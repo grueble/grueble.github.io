@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:site_name" content="Analog Dreamer" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Graphics with SDL" />
+    <meta property="og:url" content="/posts/graphics-w-sdl/" />
+    <meta property="og:image" content="http://scotthurlow.com/public/website.png" />
+
+    
+    <meta name="description" content="Blog &amp; Portfolio Website">
+    
+
+    <title>Graphics with SDL | Will Gueble</title>
+
+    <link rel="stylesheet" href="https://grueble.github.io/css/style.css" />
+    <link rel="stylesheet" href="https://grueble.github.io/css/fonts.css" />
+
+    <header>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/">/home/will gueble</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/posts/">~/archive</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/about/">~/about</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/resume/">~/résumé</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+
+<div class="article-meta">
+
+   <h1>
+      <span class="title">
+         Graphics with SDL
+      </span>
+   </h1>
+
+   
+      <h2 class="author">
+        Will Gueble
+      </h2>
+   
+
+   
+      <h2 class="date">
+         2017/06/12
+      </h2>
+   
+
+   <p class="terms">
+      
+         
+            Categories: 
+               <a href="https://grueble.github.io/categories/standoff">
+                  Standoff
+               </a> 
+            
+         
+      
+         
+            Tags: 
+               <a href="https://grueble.github.io/tags/game-development">
+                  Game Development
+               </a> 
+            
+               <a href="https://grueble.github.io/tags/sdl2">
+                  SDL2
+               </a> 
+            
+         
+      
+   </p>
+</div>
+
+
+
+<main>
+   <p>With a rough version of the game’s core mechanics in hand, I arrived at the first major hurdle of my development process - integration of a graphics API. It wouldn’t have made sense to invest any more time in iterating through mechanical variations on the main loop without a fully testable prototype; debugging with the command line can only take you so far.
+After some deliberation, I settled on the latest version of <em>Simple DirectMedia Layer</em> development library (SDL 2.0 | <a href="https://www.libsdl.org/">https://www.libsdl.org/</a>). From the site:</p>
+
+<blockquote>
+<p>“[SDL] is a cross-platform development library designed to provide low level access to audio, mouse, joystick, and graphics hardware via OpenGL and Direct3D… SDL officially supports Windows, Mac OS X, Linux, iOS, and Android… SDL is written in C, [and] works natively with C++.”</p>
+</blockquote>
+
+<p>Cross-platform compatibility is a reality of the game development industry, so I wanted a first-hand experience tuning my game for a diverse array of devices. I also want all my games to be available for friends to enjoy, so cross-platform has always been a goal.</p>
+
+<p>SDL’s hardware-based rendering also saves big on processor resources. In the end, time complexity was not a major constraint on the Standoff project. Still, developing for the lowest common denominator was a worthwhile exercise - in the future, I may end up expanding on the Standoff resource management module for use in projects with a greater need for efficiency.</p>
+
+<p>I turned to LazyFoo’s SDL tutorial series (<a href="http://lazyfoo.net/tutorials/SDL/">http://lazyfoo.net/tutorials/SDL/</a>) to bring me up to speed on the basics of using SDL. I chose to encapsulate the application’s graphical functionality within a ‘ResourceManager’ class:</p>
+
+<pre><code class="language-c++">class ResourceManager_c
+{
+public:
+   ResourceManager_c();
+
+   ~ResourceManager_c();
+
+   bool init();
+
+   bool loadMedia();
+
+   void close();
+
+   SDL_Renderer* getRenderer();
+
+   void renderSpriteAt(Sprite_e sprite_id, 
+      const std::pair&lt;int, int&gt;&amp; screen_tile_coord, double degrees = 0);
+
+protected:
+   void createSpriteMap();
+
+   // member variables
+};
+</code></pre>
+
+<p>My first priority was to delineate the window’s lifetime with initialization and garbage collection routines. These processes are represented by the ResourceManager_c::init() and close() methods, respectively. The former contains the start calls and validations required by the SDL library, while the latter frees memory allocated to the necessary raw pointers. This formulation already highlights one of the challenges in using SDL - namely, the need for raw pointers. Once again, my naive attempts to store a vector of pointers were met with frustration, but this time I was able to receive assistance from LazyFoo’s tutorials.</p>
+
+<pre><code class="language-c++">class LTexture
+{
+public:
+   LTexture();
+
+   ~LTexture();
+
+   bool loadFromFile(SDL_Renderer* renderer, std::string img_path);
+
+   void free();
+
+   void render(SDL_Renderer* renderer, SDL_Rect* dest_rect, 
+               SDL_Rect* clip = NULL, double degrees = 0);
+private:
+   SDL_Texture* mTexture;
+};
+</code></pre>
+
+<p>It was in this way that I arrived at most elegant approach of my experiments with memory management - the LTexture class - packing the flexibility of a raw pointer alongside a suite of all relevant functions. This class acts as a wrapper for a raw SDL_Texture pointer, and allows the generalized ResourceManager to interface with each texture in turn.</p>
+
+<pre><code class="language-c++">LTexture::LTexture()
+{
+   mTexture = NULL;
+}
+
+LTexture::~LTexture()
+{
+   free();
+}
+
+bool LTexture::loadFromFile(SDL_Renderer* renderer, std::string img_path)
+{
+   // get rid of any pre-existing texture
+   free();
+
+   bool success = true;
+   SDL_Texture* loaded_texture = NULL;
+
+   loaded_texture = IMG_LoadTexture(renderer, img_path.c_str());               
+   if (loaded_texture == NULL) { 
+      printf(
+         &quot;Unable to load texture %s! SDL_image Error: %s\n&quot;, 
+         img_path.c_str(), IMG_GetError());
+      success = false;
+   }
+   else {
+      mTexture = loaded_texture;
+   }
+   
+   return success;
+}
+
+void LTexture::free()
+{
+   if (mTexture != NULL) {
+      SDL_DestroyTexture(mTexture);
+      mTexture = NULL;
+   }
+}
+</code></pre>
+
+<p>The loadFromFile() and free() methods serve to control the life cycle of LTexture’s owned SDL_Texture object. The former is invoked by the ResourceManager in order to initialize the desired textures that are to be stored as member variables. The latter is called in the destructor, ensuring that the object is destroyed upon going out of scope. These routines leverage SDL_image (SDL_image 2.0 | <a href="https://www.libsdl.org/projects/SDL_image/">https://www.libsdl.org/projects/SDL_image/</a>), an image file loading library built as an extension to the base SDL library. IMG_LoadTexture() in particular is taken from the SDL_image library; the method is dynamically loaded at runtime based on an associated .dll file, and can be configured to handle files of many of the most common image file types. The flexibility provided by this library was one of the many reasons why I chose to use SDL in the first place.</p>
+
+<hr>
+
+<p><img src="https://grueble.github.io/img/graphics_w_sdl_04.png" alt="Spritesheet" /></p>
+
+<pre><code class="language-c++">struct Sprite_s
+{
+   Sprite_s(Sprite_e sprite_id, SDL_Rect clip) :
+      mSpriteId(sprite_id),
+      mClip(clip)
+   { }
+
+   Sprite_e mSpriteId;
+   SDL_Rect mClip; 
+};
+</code></pre>
+
+<p>In the interest of minimizing the number of required textures, I chose to format my assets as a sprite sheet. This means that the ResourceManager only needs to load two textures at initialization - the board and the spritesheet. After loading the textures into memory, I call the ResourceManager_c::createSpriteMap() method to map individual sprites to a unique ID.</p>
+
+<pre><code class="language-c++">void ResourceManager_c::createSpriteMap()
+{
+   SDL_Rect clip = { 0, 0, TILE_WIDTH, TILE_WIDTH };
+
+   for (int sprite_int = P2_PAWN; sprite_int != P2_MANHOLE_TILE; ++sprite_int)
+   {
+      mSprites.push_back(Sprite_s(static_cast&lt;Sprite_e&gt;(sprite_int), clip));
+
+      if (clip.x &lt; TILE_WIDTH * NUM_SPRITESHEET_COL) {
+         clip.x = clip.x + TILE_WIDTH;
+      }
+      else  {
+         clip.x = 0;
+         clip.y = clip.y + TILE_WIDTH;
+      }
+   }
+}
+</code></pre>
+
+<p>My decision to use a vector of structures is derived from a desire to implement a more efficient container than STL’s std::map, at least for my purposes. This solution is workable without being overly complex, and provides a foundation for future explorations of the concept. On a different project with more constraints, a static cast might incur more overhead than would be acceptable. In this case, O(n) for the number of sprites is a small price to pay during the initialization phase.</p>
+
+<pre><code class="language-c++">void ResourceManager_c::renderSpriteAt(
+   Sprite_e sprite_id, const std::pair&lt;int, int&gt;&amp; screen_tile_coord, double degrees)
+{
+   SDL_Rect dest_rect;
+   if (sprite_id != BOARD) {  
+      dest_rect = { 
+         screen_tile_coord.first * TILE_WIDTH, 
+         screen_tile_coord.second * TILE_WIDTH,
+         TILE_WIDTH, 
+         TILE_WIDTH
+      };
+
+      std::vector&lt;Sprite_s&gt;::iterator it;
+      for (it = mSprites.begin(); it != mSprites.end(); ++it)
+      {
+         if (it-&gt;mSpriteId == sprite_id) {
+            gSpritesheetTexture.render(
+               gRenderer, &amp;dest_rect, &amp;it-&gt;mClip, degrees);
+         }
+      }
+   }
+   else { // special case for drawing the board
+      dest_rect = {
+         (screen_tile_coord.first * TILE_WIDTH) - BORDER_WIDTH,
+         (screen_tile_coord.second * TILE_WIDTH) - BORDER_WIDTH,
+         (BORDER_WIDTH * 2) + (TILE_WIDTH * 9),
+         (BORDER_WIDTH * 2) + (TILE_WIDTH * 9)
+      };
+
+      gBoardTexture.render(gRenderer, &amp;dest_rect, NULL, degrees);
+   }
+}
+</code></pre>
+
+<pre><code class="language-c++">void LTexture::render(SDL_Renderer* renderer, SDL_Rect* dest_rect, 
+                      SDL_Rect* clip, double degrees)
+{
+   if (mTexture == NULL) {
+      printf(&quot;Missing Texture Error!&quot;);
+   }
+   else {
+      if (degrees != 0) {
+         SDL_RenderCopyEx(
+            renderer, mTexture, clip, dest_rect, degrees, NULL, SDL_FLIP_NONE);
+      }
+      else {
+         SDL_RenderCopy(renderer, mTexture, clip, dest_rect);
+      }
+   }
+}
+</code></pre>
+
+<p>With my assets properly loaded and structured, I still needed a way for the main game loop to interface with the ResourceManager class. To this end, I finally began to write a rendering algorithm. SDL’s render function must be passed the raw SDL_Texture pointer on invocation, so calling it from within LTexture is required. However, since the main game loop can’t directly access the LTexture class, another function is needed to mediate between the two. The ResourceManager_c’s renderSpriteAt() method serves this purpose, determining what to pass before LTexture’s own render() takes over. The ‘degrees’ parameter defaults to zero for both routines, making for a much more flexible function call overall.</p>
+
+<p>That about wraps up my discussion of the graphics module built for my Standoff application. Overall, this &ldquo;unit&rdquo; served as the foundation for my future forays into windowing and graphics management, with SDL2 as my current framework of choice when working with OpenGL, as opposed to GLFW or GLUT. I have worked with GLUT in the past and felt that it obscured too much of the core loop functionality for use in anything other than pure graphical simulations.</p>
+
+</main>
+
+
+   <div class="navigation">
+      <div class="container">
+         
+            <div class="icon">
+               <img class="icon" src="https://grueble.github.io/img/back.svg" alt="back" />
+            </div>
+            <div class="prev">
+               <a href="https://grueble.github.io/posts/game-logic/">
+                  Game Logic
+               </a>
+            </div>
+         
+      </div>
+      | | |
+      <div class="container">   
+         
+            <div class="next">
+               <a href="https://grueble.github.io/posts/application-logic/">
+                  Application Logic
+               </a>
+            </div>
+            <div class="icon">
+               <img class="icon" src="https://grueble.github.io/img/next.svg" alt="next" />
+            </div>
+         
+      </div>
+   </div>
+
+
+    <footer>
+
+      <hr/>
+
+      <div class="container">
+
+      <div class="copyright">
+        Copyright © 2017 Will Gueble. All Rights Reserved.
+      </div>
+
+      <div class="icons">
+
+        
+           <a href="mailto:will.gueble@gmail.com">
+              <img class="icon" src="https://grueble.github.io/img/email.svg" alt="email" />
+           </a>
+        
+  
+        
+           <a href="https://github.com/grueble" target="_blank">
+              <img class="icon" src="https://grueble.github.io/img/github.svg" alt="github" />
+           </a>
+        
+  
+        
+           <a href="https://www.linkedin.com/in/will-gueble-2b0b8850" target="_blank">
+              <img class="icon" src="https://grueble.github.io/img/linkedin.svg" alt="linkedin" />
+           </a>
+        
+
+      </div>
+
+      
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+  <script src="https://grueble.github.io/js/highlight.min.js" defer></script>
+
+
+      
+    </footer>
+  </body>
+</html>

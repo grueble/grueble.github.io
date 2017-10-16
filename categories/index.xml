@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Will Gueble</title>
+    <link>https://grueble.github.io/categories/</link>
+    <description>Recent content in Categories on Will Gueble</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <copyright>Copyright © 2017 Will Gueble. All Rights Reserved.</copyright>
+    
+	<atom:link href="https://grueble.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Ray Tracer</title>
+      <link>https://grueble.github.io/categories/ray-tracer/</link>
+      <pubDate>Thu, 28 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/categories/ray-tracer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Standoff</title>
+      <link>https://grueble.github.io/categories/standoff/</link>
+      <pubDate>Tue, 13 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/categories/standoff/</guid>
+      <description>Trying to nail down the concept for a satisfying game was a bit of a personal challenge for me. I wanted to pursue an original design for my first project, but I struggled to navigate the plethora of options available to me. It was difficult to understand the limits of my own abilities from within the vacuum of inexperience. Each of my previous ideas failed to balance ambition with accessibility.</description>
+    </item>
+    
+  </channel>
+</rss>
