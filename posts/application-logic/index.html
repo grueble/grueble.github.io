@@ -159,8 +159,6 @@
 
 <p>The Standoff application functions essentially as a state machine. Once initiated, the game’s main processing loop serves to regulate the set of actions available to the user. The state of the application is determined by two factors: the current action - represented by the Action_e enumeration - and the current turn. Each particular state only allows for the input of certain commands, so the state machine’s progression always proceeds in a deterministic manner. The input handling algorithms - StandoffApp::handleLmbDown and handleKeyDown - provide the validations necessary to ensure that only the appropriate actions are accepted, preventing the state machine from becoming stuck.</p>
 
-<p>[ [ diagram of state machine complete with list of available actions ] ] [2]</p>
-
 <p>After a call to StandoffApp::draw on startup, each iteration of the main loop features a redrawing of the board and pieces. The drawing routine only recognizes pieces that are in play or in reserve; dead pieces remain on the board, to be cleaned up upon exit. The draw method itself simply invokes the ResourceManager’s renderSpriteAt (link to prev page) function for each appropriate piece, in addition to the cursor and the briefcase.</p>
 
 <p><img src="https://grueble.github.io/img/standoff-revert-move.gif" alt="Reverting a Move" /></p>
