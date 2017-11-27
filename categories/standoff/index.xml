@@ -55,7 +55,9 @@ The Standoff project was my first foray into memory management on such a large s
       <pubDate>Sat, 10 Jun 2017 00:00:00 +0000</pubDate>
       
       <guid>https://grueble.github.io/posts/design/</guid>
-      <description>Early in the design process, I turned to the chess programming community for inspiration on how to structure my game’s logic. I quickly encountered a slew of different strategies, but the debate between piece-based vs. board-based representation caught my eye. In the former, data about the game state is stored as a collection of pieces; in the latter, the data is formatted as a 2D array of tiles. Both options provide a similar degree of expressiveness and flexibility, so the decision came down to contextual requirements in the end.</description>
+      <description>I asked Milo Beckman to provide a brief discussion of his design goals for Standoff.
+ The original idea for Standoff was to make a game that was cross between chess and a scene in an action movie where a bunch of people are pointing guns at each other.
+I was playing a game of chess where no pieces were captured for a very long time, and I thought it was cool how the strategy was oriented around the possibility of capture even though no captures were happening.</description>
     </item>
     
   </channel>

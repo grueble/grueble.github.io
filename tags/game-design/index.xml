@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
     <copyright>Copyright © 2017 Will Gueble. All Rights Reserved.</copyright>
-    <lastBuildDate>Sat, 10 Jun 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 26 Nov 2017 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://grueble.github.io/tags/game-design/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Humble Beginnings</title>
+      <link>https://grueble.github.io/posts/humble-beginnings/</link>
+      <pubDate>Sun, 26 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/posts/humble-beginnings/</guid>
+      <description>I wanted to mark this moment as my first major milestone on the way to a completed game.
+  Each unique image displayed on screen belongs to a managed game object, with seperate components to handle input, physics, and graphics. In the future, any sound effects or music will be handled by an audio component attached in a similar fashion. The component design pattern was a tip from the Robert Nystrom&amp;rsquo;s Game Programming Patterns.</description>
+    </item>
     
     <item>
       <title>Design</title>
@@ -18,7 +28,9 @@
       <pubDate>Sat, 10 Jun 2017 00:00:00 +0000</pubDate>
       
       <guid>https://grueble.github.io/posts/design/</guid>
-      <description>Early in the design process, I turned to the chess programming community for inspiration on how to structure my game’s logic. I quickly encountered a slew of different strategies, but the debate between piece-based vs. board-based representation caught my eye. In the former, data about the game state is stored as a collection of pieces; in the latter, the data is formatted as a 2D array of tiles. Both options provide a similar degree of expressiveness and flexibility, so the decision came down to contextual requirements in the end.</description>
+      <description>I asked Milo Beckman to provide a brief discussion of his design goals for Standoff.
+ The original idea for Standoff was to make a game that was cross between chess and a scene in an action movie where a bunch of people are pointing guns at each other.
+I was playing a game of chess where no pieces were captured for a very long time, and I thought it was cool how the strategy was oriented around the possibility of capture even though no captures were happening.</description>
     </item>
     
   </channel>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:site_name" content="Analog Dreamer" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Humble Beginnings" />
+    <meta property="og:url" content="/posts/humble-beginnings/" />
+    <meta property="og:image" content="http://scotthurlow.com/public/website.png" />
+
+    
+    <meta name="description" content="Blog &amp; Portfolio Website">
+    
+
+    <title>Humble Beginnings | Will Gueble</title>
+
+    <link rel="stylesheet" href="https://grueble.github.io/css/style.css" />
+    <link rel="stylesheet" href="https://grueble.github.io/css/fonts.css" />
+
+    <header>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/">/home/will gueble</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/posts/">~/archive</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/about/">~/about</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/resume/">~/résumé</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+
+<div class="article-meta">
+
+   <h1>
+      <span class="title">
+         Humble Beginnings
+      </span>
+   </h1>
+
+   
+      <h2 class="author">
+        Will Gueble
+      </h2>
+   
+
+   
+      <h2 class="date">
+         2017/11/26
+      </h2>
+   
+
+   <p class="terms">
+      
+         
+            Categories: 
+               <a href="https://grueble.github.io/categories/wasteland">
+                  Wasteland
+               </a> 
+            
+         
+      
+         
+            Tags: 
+               <a href="https://grueble.github.io/tags/game-design">
+                  Game Design
+               </a> 
+            
+               <a href="https://grueble.github.io/tags/game-development">
+                  Game Development
+               </a> 
+            
+         
+      
+   </p>
+</div>
+
+
+
+<main>
+   <p>I wanted to mark this moment as my first major milestone on the way to a completed game.</p>
+
+<div class="movie">
+   <video width="672" controls>
+      <source src="https://grueble.github.io/img/wasteland-milestone-1.1.mp4" type="video/mp4">
+   </video>
+</div>
+
+<p>Each unique image displayed on screen belongs to a managed game object, with seperate components to handle input, physics, and graphics. In the future, any sound effects or music will be handled by an audio component attached in a similar fashion. The component design pattern was a tip from the Robert Nystrom&rsquo;s <a href="http://gameprogrammingpatterns.com/component.html"><em>Game Programming Patterns</em></a>.</p>
+
+<p>The game&rsquo;s base logic revolves around a modifed Scene Graph design. The entire world is updated during each loop iteration, changing the positions of any objects that will be rendered to screen at the bottom of the loop. The use of a graph design allows for rudimentary space partioning; nearby objects are related hierarchically for both physical and graphical purposes, with the root node managing ownership of the entire world. I found that QuadTree&rsquo;s and beyond were not necessary to get my prototype off the ground, but I have left space should they become necessary in the future.</p>
+
+<p>The input component serves as a placeholder for my AI logic. Both the player and any NPCs will be controlled by a set of commands owned by each object&rsquo;s input component.</p>
+
+<p>Physics simulation is handled with the help of the Separating Axis Theorem (SAT). For this reason, I have restricted my design to include only Axis-Aligned objects and Circles. <a href="http://www.metanetsoftware.com/technique/tutorialA.html#section0">This</a> tutorial proved most helpful in getting my design off the ground. At the present moment, only Axis-Aligned Bounding Boxes (AABBs) and Axis-Aligned Right Triangles have been implemented - despite the player&rsquo;s circular appearance, it is coded as an AABB. Collisions are resolved by projection along the axis of least overlap.</p>
+
+<p>The following code snippet features my algorithm for detection a collision between two AABBs. The projection vector is added to the colliding object&rsquo;s position in order to move it out of penetration. Additional collision algorithms can be found on my <a href="https://github.com/grueble/Wasteland/blob/master/PhysEngine.cpp">github</a>.</p>
+
+<pre><code class="language-c++">bool AABBvsAABB(Manifold&amp; m)
+{
+   AABB_t* a = m.a-&gt;asAABB();
+   AABB_t* b = m.b-&gt;asAABB();
+
+   float dist_x = m.a_p.x - m.b_p.x;
+   float a_proj = scalar_proj(a-&gt;xw, X_AXIS);
+   float b_proj = scalar_proj(b-&gt;xw, X_AXIS);
+   float overlap_x = a_proj + b_proj - std::abs(dist_x);
+   if (overlap_x &gt; 0) { // test for projection overlap along the x-axis
+      float dist_y = m.a_p.y - m.b_p.y;
+      a_proj = scalar_proj(a-&gt;yw, Y_AXIS);
+      b_proj = scalar_proj(b-&gt;yw, Y_AXIS);
+      float overlap_y = a_proj + b_proj - std::abs(dist_y);
+      if (overlap_y &gt; 0) { // test for projection overlap along the y-axis
+         // project out of collision along the axis of least overlap
+         if (overlap_x &lt; overlap_y) { 
+            if (dist_x &gt; 0) { 
+               m.proj = vec2_t(overlap_x, 0); // x-axis is min
+            }
+            else {
+               m.proj = vec2_t(-overlap_x, 0);
+            }
+         }
+         else {
+            if (dist_y &gt; 0) {
+               m.proj = vec2_t(0, overlap_y); // y-axis is min 
+            }
+            else {
+               m.proj = vec2_t(0, -overlap_y);
+            }
+         }
+         return true;
+      }
+   }
+   return false;
+}
+</code></pre>
+
+<p>The graphics module leverages the OpenGL API. At startup, I load each objects vertices into a mesh object, rendering with glDrawElements during each loop&rsquo;s call to update. The application currently runs at 60FPS, but I have yet to test the limits of the engine. The graphics module contains several avenues for performance improvements, but I have postponed that work until the need arises. My textures are encoded in RGBA format - I use the alpha channel in order to render circular objects using two triangles. The screen positions of each object are updated via matrix transformations during each loop&rsquo;s call to update.</p>
+
+<div class="movie">
+   <video width="672" controls>
+      <source src="https://grueble.github.io/img/wasteland-milestone-1.2.mp4" type="video/mp4">
+   </video>
+</div>
+
+<p>I included this video to discuss a neat trick I used to describe triangles. Any game object&rsquo;s position field is stored at the highest level of the entity, allowing for it&rsquo;s use within each separate component. This meant that my hitboxes could not contain a position, to avoid unnecessary calculation. I decided to represent objects by their halfwidth vectors. For AABB&rsquo;s, this is quite beneficial, as the halfwidth vectors can be used during generalized SAT collision detection. I wanted to store triangles as a pair of legs, in addition to the precomputed third axis used by the SAT (a normalized direction vector). In order to keep these physics objects as lighweight as possible, I wanted to find a way to avoid using any other data fields, such as a direction. To this end, I use the sign of halfwidth vectors to indicate their direction, accounting for this decision in my collision algorithm. The above video demonstrates collision with triangles from several directions.</p>
+
+<p>The code for this project can be found on my github within the &lsquo;<a href="https://github.com/grueble/Wasteland">Wasteland</a>&rsquo; repository.</p>
+
+</main>
+
+
+
+    <footer>
+
+      <hr/>
+
+      <div class="container">
+
+      <div class="copyright">
+        Copyright © 2017 Will Gueble. All Rights Reserved.
+      </div>
+
+      <div class="icons">
+
+        
+           <a href="mailto:will.gueble@gmail.com">
+              <img class="icon" src="https://grueble.github.io/img/email.svg" alt="email" />
+           </a>
+        
+  
+        
+           <a href="https://github.com/grueble" target="_blank">
+              <img class="icon" src="https://grueble.github.io/img/github.svg" alt="github" />
+           </a>
+        
+  
+        
+           <a href="https://www.linkedin.com/in/will-gueble-2b0b8850" target="_blank">
+              <img class="icon" src="https://grueble.github.io/img/linkedin.svg" alt="linkedin" />
+           </a>
+        
+
+      </div>
+
+      
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+  <script src="https://grueble.github.io/js/highlight.min.js" defer></script>
+
+
+      
+    </footer>
+  </body>
+</html>
