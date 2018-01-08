@@ -275,10 +275,10 @@ void Game_c::shootout()
             Piece_n::Direction_e secondary_direction;
             switch(direction)
             {
-               case Piece_n::UP : { secondary_direction = Piece_n::RIGHT; }
-               case Piece_n::DOWN : { secondary_direction = Piece_n::LEFT; }
-               case Piece_n::LEFT : { secondary_direction = Piece_n::UP; }
-               case Piece_n::RIGHT : { secondary_direction = Piece_n::DOWN; }
+               case Piece_n::UP : { secondary_direction = Piece_n::RIGHT; break; }
+               case Piece_n::DOWN : { secondary_direction = Piece_n::LEFT; break; }
+               case Piece_n::LEFT : { secondary_direction = Piece_n::UP; break; }
+               case Piece_n::RIGHT : { secondary_direction = Piece_n::DOWN; break; }
             }
             detectHit2(**it, secondary_direction, live_pieces);
          }
@@ -296,40 +296,37 @@ void Game_c::detectHit(Piece_n::Piece_c&amp; piece,
    // stores the hit piece closest to the shooter
    PiecePtr hit_piece;
 
-   std::vector&lt;PiecePtr&gt;::iterator it;
-   for (it = pieces.begin(); it != pieces.end(); ++it)
-   { 
-      switch (direction)
+   switch (direction)
+   {
+      case Piece_n::UP :
       {
-         case Piece_n::UP :
+         std::vector&lt;PiecePtr&gt;::iterator it;
+         for (it = pieces.begin(); it != pieces.end(); ++it)
          {
-            std::vector&lt;PiecePtr&gt;::iterator it;
-            for (it = pieces.begin(); it != pieces.end(); ++it)
+            if ((*it)-&gt;getPlayState() == Piece_n::LIVE)
             {
-               if ((*it)-&gt;getPlayState() == Piece_n::LIVE)
+               if ((*it)-&gt;getPosition().first == piece.getPosition().first &amp;&amp;
+                   (*it)-&gt;getPosition().second &lt; piece.getPosition().second)
                {
-                  if ((*it)-&gt;getPosition().first == piece.getPosition().first &amp;&amp;
-                      (*it)-&gt;getPosition().second &lt; piece.getPosition().second)
+                  if (hit_piece_flag)
                   {
-                     if (hit_piece_flag &amp;&amp;
-                        (*it)-&gt;getPosition().second &gt; hit_piece-&gt;getPosition().second)
+                     if ((*it)-&gt;getPosition().second &gt; hit_piece-&gt;getPosition().second)
                      {
                         hit_piece = *it;
                      }
-                     else
-                     {
-                        hit_piece = *it;
-                        hit_piece_flag = true;
-                     }
+                  }
+                  else
+                  {
+                     hit_piece = *it;
+                     hit_piece_flag = true;
                   }
                }
             }
-            break;
          }
-         // ... case for each other possible piece direction: DOWN, LEFT, RIGHT
+         break;
       }
+      // ... case for each other possible piece direction: DOWN, LEFT, RIGHT
    }
-
    if (piece.getTeam() != hit_piece-&gt;getTeam())
    {
       hit_piece-&gt;nextPlayState();
