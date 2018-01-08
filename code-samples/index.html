@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:site_name" content="Analog Dreamer" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Code Samples" />
+    <meta property="og:url" content="/code-samples/" />
+    <meta property="og:image" content="http://scotthurlow.com/public/website.png" />
+
+    
+    <meta name="description" content="Blog &amp; Portfolio Website">
+    
+
+    <title>Code Samples | Will Gueble</title>
+
+    <link rel="stylesheet" href="https://grueble.github.io/css/style.css" />
+    <link rel="stylesheet" href="https://grueble.github.io/css/fonts.css" />
+
+    <header>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/">/home/will gueble</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/posts/">~/archive</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/about/">~/about</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="https://grueble.github.io/resume/">~/résumé</a>
+      </li>
+      
+      
+      <li class="pull-left current">
+        <a href="https://grueble.github.io/code-samples/">~/code samples</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+
+<div class="article-meta">
+
+   <h1>
+      <span class="title">
+         Code Samples
+      </span>
+   </h1>
+
+   
+
+   
+
+   <p class="terms">
+      
+         
+      
+         
+      
+   </p>
+</div>
+
+
+
+<main>
+   
+
+<h4 id="2d-axis-aligned-bounding-box-vs-triangle-collision-detection-using-the-separating-axis-theorem">~ 2D Axis-Aligned Bounding Box vs. Triangle Collision Detection using the Separating Axis Theorem</h4>
+
+<pre><code class="language-c++">bool AABBvsTriangle(Manifold&amp; m)
+{
+   AABB_t* a = m.a-&gt;asAABB();
+   Triangle* b = m.b-&gt;asTriangle();
+
+   bool hypotenuse_case = collide_hyp(*b, m.b_p, m.a_p);
+
+   // test for projection overlap along the x-axis
+   float dist_x = m.a_p.x - m.b_p.x;
+   float a_proj = scalar_proj(a-&gt;xw, X_AXIS); // + scalar_proj(a-&gt;yw, X_AXIS);
+   float b_proj, overlap_x;
+   // determine the relative position of AABB to Triangle on the x-axis
+   if ((b-&gt;xw.x &gt; 0 &amp;&amp; dist_x &lt; 0) || // b faces (+) and a is (-) of b
+       (b-&gt;xw.x &lt; 0 &amp;&amp; dist_x &gt; 0))   // b faces (-) and a is (+) of b
+   {
+      // hypotenuse opposite from AABB along x-axis
+      overlap_x = a_proj - std::abs(dist_x);
+   }
+   else { // hypotenuse adjacent to AABB along y-axis
+      // float b_halfwidth_x = b-&gt;xw.x / 2; // NOTE: changed b-&gt;xw.x to halfwidth 
+      dist_x = m.a_p.x - (m.b_p.x + b-&gt;xw.x);
+      overlap_x = a_proj + std::abs(b-&gt;xw.x) - std::abs(dist_x);
+   }
+   if (overlap_x &gt; 0)
+   {
+      // test for projection overlap along the y-axis
+      float dist_y = m.a_p.y - m.b_p.y;
+      a_proj = /* scalar_proj(a-&gt;xw, Y_AXIS) + */ scalar_proj(a-&gt;yw, Y_AXIS);
+      float overlap_y;
+      // determine the relative position of AABB to Triangle on the y-axis
+      if ((b-&gt;yw.y &gt; 0 &amp;&amp; dist_y &lt; 0) || // b faces (+) and a is (-) of b
+          (b-&gt;yw.y &lt; 0 &amp;&amp; dist_y &gt; 0))   // b faces (-) and a is (+) of b
+      {
+         // hypotenuse opposite from AABB along x-axis
+         overlap_y = a_proj - std::abs(dist_y);
+      }
+      else { // hypotenuse adjacent to AABB along y-axis
+         // float b_halfwidth_y = b-&gt;yw.y / 2; // NOTE: changed b-&gt;yw.y to halfwidth 
+         dist_y = m.a_p.y - (m.b_p.y + b-&gt;yw.y);
+         overlap_y = a_proj + std::abs(b-&gt;yw.y) - std::abs(dist_y);
+      }
+      if (overlap_y &gt; 0)
+      {
+         if (!hypotenuse_case)
+         {
+            // project out of collision along the axis of least overlap
+            if (overlap_x &lt; overlap_y) {
+               if (dist_x &gt; 0) { 
+                  m.projection = vec2_t(overlap_x, 0); // x-axis is min
+               }
+               else {
+                  m.projection = vec2_t(-overlap_x, 0);
+               }
+            }
+            else {
+               if (dist_y &gt; 0) {
+                  m.projection = vec2_t(0, overlap_y); // y-axis is min 
+               }
+               else {
+                  m.projection = vec2_t(0, -overlap_y);
+               }
+            }
+
+            return true;
+         }
+         else // special case for when hypotenuse lies between the two centers
+         {
+            // test for projection overlap along the 3rd separating axis
+            float dist_third =
+               (b-&gt;third_axis.x * (m.b_p.x - m.a_p.x)) 
+               + (b-&gt;third_axis.y * (m.b_p.y - m.a_p.y));
+
+            // 3rd axis may contain negatives, so we need to use magnitude for the AABB
+            a_proj = std::abs(scalar_proj(a-&gt;xw, b-&gt;third_axis)) + 
+                     std::abs(scalar_proj(a-&gt;yw, b-&gt;third_axis));
+
+            // both legs are used bc they are halfwidths
+            b_proj = scalar_proj(b-&gt;xw, b-&gt;third_axis) 
+                     + scalar_proj(b-&gt;yw, b-&gt;third_axis);
+
+            float overlap_third = a_proj + b_proj - std::abs(dist_third);
+
+            if (overlap_third &gt; 0)
+            {
+               // project out of collision along the axis of least overlap
+               if (overlap_x &lt; overlap_y) {
+                  if (overlap_x &lt; overlap_third) {
+                     if (dist_x &gt; 0) {
+                        m.projection = vec2_t(overlap_x, 0); // x- axis is min
+                     }
+                     else {
+                        m.projection = vec2_t(-overlap_x, 0);
+                     }
+                  } 
+                  else { // third axis is min
+                     m.projection = 
+                        vec2_t(b-&gt;third_axis.x * overlap_third, 
+                               b-&gt;third_axis.y * overlap_third);
+                  }
+               }
+               else {
+                  if (overlap_y &lt; overlap_third) {
+                     if (dist_y &gt; 0) {
+                        m.projection = vec2_t(0, overlap_y); // y-axis is min   
+                     }
+                     else {
+                        m.projection = vec2_t(0, -overlap_y);
+                     }
+                  } 
+                  else { // third axis is min
+                     m.projection = 
+                        vec2_t(b-&gt;third_axis.x * overlap_third, 
+                               b-&gt;third_axis.y * overlap_third);
+                  }
+               }
+
+               return true;
+            }
+         }
+      }
+   }
+
+   return false;
+}
+
+struct Manifold
+{
+   PhysObj* a; // unowned pointer to a
+   PhysObj* b; // unowned pointer to b
+   vec3_t a_p; // position of a
+   vec3_t b_p; // position of b
+
+   bool resolve = false;
+   vec2_t projection;
+   material_t material;
+};
+</code></pre>
+
+<h4 id="executing-a-shootout-in-standoff">~ Executing a Shootout in Standoff</h4>
+
+<pre><code class="language-c++">/* For each &quot;armed&quot; piece in play, mark the enemy piece closest to the shooter for
+ * removal, accounting for both friendly obstacles to line-of-sight and piece's 
+ * with two hit rays (slingers)
+ */
+void Game_c::shootout()
+{
+   std::vector&lt;PiecePtr&gt; live_pieces;
+   std::vector&lt;PiecePtr&gt; hit_pieces;
+
+   std::vector&lt;PiecePtr&gt;::iterator p1_it;
+   for (p1_it = mPlayer1Pieces.begin(); p1_it != mPlayer1Pieces.end(); ++p1_it)
+   {
+      if ((*p1_it)-&gt;getPlayState() == Piece_n::LIVE)
+      {
+         live_pieces.push_back(*p1_it);
+      }
+   }
+
+   std::vector&lt;PiecePtr&gt;::iterator p2_it;
+   for (p2_it = mPlayer2Pieces.begin(); p2_it != mPlayer2Pieces.end(); ++p2_it)
+   {
+      if ((*p2_it)-&gt;getPlayState() == Piece_n::LIVE)
+      {
+         live_pieces.push_back(*p2_it);
+      }
+   }
+
+   std::vector&lt;PiecePtr&gt;::iterator it;
+   for (it = live_pieces.begin(); it != live_pieces.end(); ++it)
+   {
+      if ((*it)-&gt;getPieceType() != Piece_n::PAWN)
+      {
+         Piece_n::Direction_e direction = (*it)-&gt;getDirection();
+         detectHit2(**it, direction, live_pieces);
+
+         if ((*it)-&gt;getPieceType() == Piece_n::SLINGER)
+         {
+            Piece_n::Direction_e secondary_direction;
+            switch(direction)
+            {
+               case Piece_n::UP : { secondary_direction = Piece_n::RIGHT; }
+               case Piece_n::DOWN : { secondary_direction = Piece_n::LEFT; }
+               case Piece_n::LEFT : { secondary_direction = Piece_n::UP; }
+               case Piece_n::RIGHT : { secondary_direction = Piece_n::DOWN; }
+            }
+            detectHit2(**it, secondary_direction, live_pieces);
+         }
+      }
+   }
+}
+
+void Game_c::detectHit(Piece_n::Piece_c&amp; piece, 
+                       Piece_n::Direction_e direction,
+                       std::vector&lt;PiecePtr&gt;&amp; pieces)
+{
+   // true once if we have already hit a piece (monodirectional)
+   bool hit_piece_flag = false;
+
+   // stores the hit piece closest to the shooter
+   PiecePtr hit_piece;
+
+   std::vector&lt;PiecePtr&gt;::iterator it;
+   for (it = pieces.begin(); it != pieces.end(); ++it)
+   { 
+      switch (direction)
+      {
+         case Piece_n::UP :
+         {
+            std::vector&lt;PiecePtr&gt;::iterator it;
+            for (it = pieces.begin(); it != pieces.end(); ++it)
+            {
+               if ((*it)-&gt;getPlayState() == Piece_n::LIVE)
+               {
+                  if ((*it)-&gt;getPosition().first == piece.getPosition().first &amp;&amp;
+                      (*it)-&gt;getPosition().second &lt; piece.getPosition().second)
+                  {
+                     if (hit_piece_flag &amp;&amp;
+                        (*it)-&gt;getPosition().second &gt; hit_piece-&gt;getPosition().second)
+                     {
+                        hit_piece = *it;
+                     }
+                     else
+                     {
+                        hit_piece = *it;
+                        hit_piece_flag = true;
+                     }
+                  }
+               }
+            }
+            break;
+         }
+         // ... case for each other possible piece direction: DOWN, LEFT, RIGHT
+      }
+   }
+
+   if (piece.getTeam() != hit_piece-&gt;getTeam())
+   {
+      hit_piece-&gt;nextPlayState();
+   }
+}
+</code></pre>
+
+</main>
+
+
+
+    <footer>
+
+      <hr/>
+
+      <div class="container">
+
+      <div class="copyright">
+        Copyright © 2017 Will Gueble. All Rights Reserved.
+      </div>
+
+      <div class="icons">
+
+        
+           <a href="mailto:will.gueble@gmail.com">
+              <img class="icon" src="https://grueble.github.io/img/email.svg" alt="email" />
+           </a>
+        
+  
+        
+           <a href="https://github.com/grueble" target="_blank">
+              <img class="icon" src="https://grueble.github.io/img/github.svg" alt="github" />
+           </a>
+        
+  
+        
+           <a href="https://www.linkedin.com/in/will-gueble-2b0b8850" target="_blank">
+              <img class="icon" src="https://grueble.github.io/img/linkedin.svg" alt="linkedin" />
+           </a>
+        
+
+      </div>
+
+      
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+  <script src="https://grueble.github.io/js/highlight.min.js" defer></script>
+
+
+      
+    </footer>
+  </body>
+</html>
