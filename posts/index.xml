@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Will Gueble</title>
+    <title>Posts on Zade Gueble</title>
     <link>https://grueble.github.io/posts/</link>
-    <description>Recent content in Posts on Will Gueble</description>
+    <description>Recent content in Posts on Zade Gueble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <copyright>Copyright © 2017 Will Gueble. All Rights Reserved.</copyright>
     <lastBuildDate>Sun, 26 Nov 2017 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://grueble.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
@@ -19,7 +18,7 @@
       
       <guid>https://grueble.github.io/posts/humble-beginnings/</guid>
       <description>I wanted to mark this moment as my first major milestone on the way to a completed game.
-  Each unique image displayed on screen belongs to a managed game object, with seperate components to handle input, physics, and graphics. In the future, any sound effects or music will be handled by an audio component attached in a similar fashion. The component design pattern was a tip from the Robert Nystrom&amp;rsquo;s Game Programming Patterns.</description>
+Each unique image displayed on screen belongs to a managed game object, with seperate components to handle input, physics, and graphics. In the future, any sound effects or music will be handled by an audio component attached in a similar fashion. The component design pattern was a tip from the Robert Nystrom&amp;rsquo;s Game Programming Patterns.</description>
     </item>
     
     <item>
@@ -77,7 +76,7 @@ The Standoff project was my first foray into memory management on such a large s
       <guid>https://grueble.github.io/posts/design/</guid>
       <description>I asked Milo Beckman to provide a brief discussion of his design goals for Standoff.
  The original idea for Standoff was to make a game that was cross between chess and a scene in an action movie where a bunch of people are pointing guns at each other.
-I was playing a game of chess where no pieces were captured for a very long time, and I thought it was cool how the strategy was oriented around the possibility of capture even though no captures were happening.</description>
+  I was playing a game of chess where no pieces were captured for a very long time, and I thought it was cool how the strategy was oriented around the possibility of capture even though no captures were happening.</description>
     </item>
     
   </channel>

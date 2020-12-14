@@ -15,7 +15,7 @@
     <meta name="description" content="Blog &amp; Portfolio Website">
     
 
-    <title>Code Samples | Will Gueble</title>
+    <title>Code Samples | Zade Gueble</title>
 
     <link rel="stylesheet" href="https://grueble.github.io/css/style.css" />
     <link rel="stylesheet" href="https://grueble.github.io/css/fonts.css" />
@@ -31,7 +31,7 @@
       
       
       <li class="pull-left ">
-        <a href="https://grueble.github.io/">/home/will gueble</a>
+        <a href="https://grueble.github.io/">/home/zade gueble</a>
       </li>
       
       
@@ -91,249 +91,242 @@
 
 
 <main>
-   
-
-<h4 id="2d-axis-aligned-bounding-box-vs-triangle-collision-detection-using-the-separating-axis-theorem">~ 2D Axis-Aligned Bounding Box vs. Triangle Collision Detection using the Separating Axis Theorem</h4>
-
-<pre><code class="language-c++">bool AABBvsTriangle(Manifold&amp; m)
+   <h4 id="-2d-axis-aligned-bounding-box-vs-triangle-collision-detection-using-the-separating-axis-theorem">~ 2D Axis-Aligned Bounding Box vs. Triangle Collision Detection using the Separating Axis Theorem</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">AABBvsTriangle</span>(Manifold<span style="color:#f92672">&amp;</span> m)
 {
-   AABB_t* a = m.a-&gt;asAABB();
-   Triangle* b = m.b-&gt;asTriangle();
+   AABB_t<span style="color:#f92672">*</span> a <span style="color:#f92672">=</span> m.a<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>asAABB();
+   Triangle<span style="color:#f92672">*</span> b <span style="color:#f92672">=</span> m.b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>asTriangle();
 
-   bool hypotenuse_case = collide_hyp(*b, m.b_p, m.a_p);
+   <span style="color:#66d9ef">bool</span> hypotenuse_case <span style="color:#f92672">=</span> collide_hyp(<span style="color:#f92672">*</span>b, m.b_p, m.a_p);
 
-   // test for projection overlap along the x-axis
-   float dist_x = m.a_p.x - m.b_p.x;
-   float a_proj = scalar_proj(a-&gt;xw, X_AXIS); // + scalar_proj(a-&gt;yw, X_AXIS);
-   float b_proj, overlap_x;
-   // determine the relative position of AABB to Triangle on the x-axis
-   if ((b-&gt;xw.x &gt; 0 &amp;&amp; dist_x &lt; 0) || // b faces (+) and a is (-) of b
-       (b-&gt;xw.x &lt; 0 &amp;&amp; dist_x &gt; 0))   // b faces (-) and a is (+) of b
-   {
-      // hypotenuse opposite from AABB along x-axis
-      overlap_x = a_proj - std::abs(dist_x);
+   <span style="color:#75715e">// test for projection overlap along the x-axis
+</span><span style="color:#75715e"></span>   <span style="color:#66d9ef">float</span> dist_x <span style="color:#f92672">=</span> m.a_p.x <span style="color:#f92672">-</span> m.b_p.x;
+   <span style="color:#66d9ef">float</span> a_proj <span style="color:#f92672">=</span> scalar_proj(a<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>xw, X_AXIS); <span style="color:#75715e">// + scalar_proj(a-&gt;yw, X_AXIS);
+</span><span style="color:#75715e"></span>   <span style="color:#66d9ef">float</span> b_proj, overlap_x;
+   <span style="color:#75715e">// determine the relative position of AABB to Triangle on the x-axis
+</span><span style="color:#75715e"></span>   <span style="color:#66d9ef">if</span> ((b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>xw.x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> dist_x <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">|</span><span style="color:#f92672">|</span> <span style="color:#75715e">// b faces (+) and a is (-) of b
+</span><span style="color:#75715e"></span>       (b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>xw.x <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> dist_x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>))   <span style="color:#75715e">// b faces (-) and a is (+) of b
+</span><span style="color:#75715e"></span>   {
+      <span style="color:#75715e">// hypotenuse opposite from AABB along x-axis
+</span><span style="color:#75715e"></span>      overlap_x <span style="color:#f92672">=</span> a_proj <span style="color:#f92672">-</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>abs(dist_x);
    }
-   else { // hypotenuse adjacent to AABB along y-axis
-      // float b_halfwidth_x = b-&gt;xw.x / 2; // NOTE: changed b-&gt;xw.x to halfwidth 
-      dist_x = m.a_p.x - (m.b_p.x + b-&gt;xw.x);
-      overlap_x = a_proj + std::abs(b-&gt;xw.x) - std::abs(dist_x);
+   <span style="color:#66d9ef">else</span> { <span style="color:#75715e">// hypotenuse adjacent to AABB along y-axis
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// float b_halfwidth_x = b-&gt;xw.x / 2; // NOTE: changed b-&gt;xw.x to halfwidth 
+</span><span style="color:#75715e"></span>      dist_x <span style="color:#f92672">=</span> m.a_p.x <span style="color:#f92672">-</span> (m.b_p.x <span style="color:#f92672">+</span> b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>xw.x);
+      overlap_x <span style="color:#f92672">=</span> a_proj <span style="color:#f92672">+</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>abs(b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>xw.x) <span style="color:#f92672">-</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>abs(dist_x);
    }
-   if (overlap_x &gt; 0)
+   <span style="color:#66d9ef">if</span> (overlap_x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>)
    {
-      // test for projection overlap along the y-axis
-      float dist_y = m.a_p.y - m.b_p.y;
-      a_proj = /* scalar_proj(a-&gt;xw, Y_AXIS) + */ scalar_proj(a-&gt;yw, Y_AXIS);
-      float overlap_y;
-      // determine the relative position of AABB to Triangle on the y-axis
-      if ((b-&gt;yw.y &gt; 0 &amp;&amp; dist_y &lt; 0) || // b faces (+) and a is (-) of b
-          (b-&gt;yw.y &lt; 0 &amp;&amp; dist_y &gt; 0))   // b faces (-) and a is (+) of b
-      {
-         // hypotenuse opposite from AABB along x-axis
-         overlap_y = a_proj - std::abs(dist_y);
+      <span style="color:#75715e">// test for projection overlap along the y-axis
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">float</span> dist_y <span style="color:#f92672">=</span> m.a_p.y <span style="color:#f92672">-</span> m.b_p.y;
+      a_proj <span style="color:#f92672">=</span> <span style="color:#75715e">/* scalar_proj(a-&gt;xw, Y_AXIS) + */</span> scalar_proj(a<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>yw, Y_AXIS);
+      <span style="color:#66d9ef">float</span> overlap_y;
+      <span style="color:#75715e">// determine the relative position of AABB to Triangle on the y-axis
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span> ((b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>yw.y <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> dist_y <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">|</span><span style="color:#f92672">|</span> <span style="color:#75715e">// b faces (+) and a is (-) of b
+</span><span style="color:#75715e"></span>          (b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>yw.y <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> dist_y <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>))   <span style="color:#75715e">// b faces (-) and a is (+) of b
+</span><span style="color:#75715e"></span>      {
+         <span style="color:#75715e">// hypotenuse opposite from AABB along x-axis
+</span><span style="color:#75715e"></span>         overlap_y <span style="color:#f92672">=</span> a_proj <span style="color:#f92672">-</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>abs(dist_y);
       }
-      else { // hypotenuse adjacent to AABB along y-axis
-         // float b_halfwidth_y = b-&gt;yw.y / 2; // NOTE: changed b-&gt;yw.y to halfwidth 
-         dist_y = m.a_p.y - (m.b_p.y + b-&gt;yw.y);
-         overlap_y = a_proj + std::abs(b-&gt;yw.y) - std::abs(dist_y);
+      <span style="color:#66d9ef">else</span> { <span style="color:#75715e">// hypotenuse adjacent to AABB along y-axis
+</span><span style="color:#75715e"></span>         <span style="color:#75715e">// float b_halfwidth_y = b-&gt;yw.y / 2; // NOTE: changed b-&gt;yw.y to halfwidth 
+</span><span style="color:#75715e"></span>         dist_y <span style="color:#f92672">=</span> m.a_p.y <span style="color:#f92672">-</span> (m.b_p.y <span style="color:#f92672">+</span> b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>yw.y);
+         overlap_y <span style="color:#f92672">=</span> a_proj <span style="color:#f92672">+</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>abs(b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>yw.y) <span style="color:#f92672">-</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>abs(dist_y);
       }
-      if (overlap_y &gt; 0)
+      <span style="color:#66d9ef">if</span> (overlap_y <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>)
       {
-         if (!hypotenuse_case)
+         <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>hypotenuse_case)
          {
-            // project out of collision along the axis of least overlap
-            if (overlap_x &lt; overlap_y) {
-               if (dist_x &gt; 0) { 
-                  m.projection = vec2_t(overlap_x, 0); // x-axis is min
-               }
-               else {
-                  m.projection = vec2_t(-overlap_x, 0);
+            <span style="color:#75715e">// project out of collision along the axis of least overlap
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (overlap_x <span style="color:#f92672">&lt;</span> overlap_y) {
+               <span style="color:#66d9ef">if</span> (dist_x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) { 
+                  m.projection <span style="color:#f92672">=</span> vec2_t(overlap_x, <span style="color:#ae81ff">0</span>); <span style="color:#75715e">// x-axis is min
+</span><span style="color:#75715e"></span>               }
+               <span style="color:#66d9ef">else</span> {
+                  m.projection <span style="color:#f92672">=</span> vec2_t(<span style="color:#f92672">-</span>overlap_x, <span style="color:#ae81ff">0</span>);
                }
             }
-            else {
-               if (dist_y &gt; 0) {
-                  m.projection = vec2_t(0, overlap_y); // y-axis is min 
-               }
-               else {
-                  m.projection = vec2_t(0, -overlap_y);
+            <span style="color:#66d9ef">else</span> {
+               <span style="color:#66d9ef">if</span> (dist_y <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+                  m.projection <span style="color:#f92672">=</span> vec2_t(<span style="color:#ae81ff">0</span>, overlap_y); <span style="color:#75715e">// y-axis is min 
+</span><span style="color:#75715e"></span>               }
+               <span style="color:#66d9ef">else</span> {
+                  m.projection <span style="color:#f92672">=</span> vec2_t(<span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span>overlap_y);
                }
             }
 
-            return true;
+            <span style="color:#66d9ef">return</span> true;
          }
-         else // special case for when hypotenuse lies between the two centers
-         {
-            // test for projection overlap along the 3rd separating axis
-            float dist_third =
-               (b-&gt;third_axis.x * (m.b_p.x - m.a_p.x)) 
-               + (b-&gt;third_axis.y * (m.b_p.y - m.a_p.y));
+         <span style="color:#66d9ef">else</span> <span style="color:#75715e">// special case for when hypotenuse lies between the two centers
+</span><span style="color:#75715e"></span>         {
+            <span style="color:#75715e">// test for projection overlap along the 3rd separating axis
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">float</span> dist_third <span style="color:#f92672">=</span>
+               (b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>third_axis.x <span style="color:#f92672">*</span> (m.b_p.x <span style="color:#f92672">-</span> m.a_p.x)) 
+               <span style="color:#f92672">+</span> (b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>third_axis.y <span style="color:#f92672">*</span> (m.b_p.y <span style="color:#f92672">-</span> m.a_p.y));
 
-            // 3rd axis may contain negatives, so we need to use magnitude for the AABB
-            a_proj = std::abs(scalar_proj(a-&gt;xw, b-&gt;third_axis)) + 
-                     std::abs(scalar_proj(a-&gt;yw, b-&gt;third_axis));
+            <span style="color:#75715e">// 3rd axis may contain negatives, so we need to use magnitude for the AABB
+</span><span style="color:#75715e"></span>            a_proj <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>abs(scalar_proj(a<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>xw, b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>third_axis)) <span style="color:#f92672">+</span> 
+                     std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>abs(scalar_proj(a<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>yw, b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>third_axis));
 
-            // both legs are used bc they are halfwidths
-            b_proj = scalar_proj(b-&gt;xw, b-&gt;third_axis) 
-                     + scalar_proj(b-&gt;yw, b-&gt;third_axis);
+            <span style="color:#75715e">// both legs are used bc they are halfwidths
+</span><span style="color:#75715e"></span>            b_proj <span style="color:#f92672">=</span> scalar_proj(b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>xw, b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>third_axis) 
+                     <span style="color:#f92672">+</span> scalar_proj(b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>yw, b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>third_axis);
 
-            float overlap_third = a_proj + b_proj - std::abs(dist_third);
+            <span style="color:#66d9ef">float</span> overlap_third <span style="color:#f92672">=</span> a_proj <span style="color:#f92672">+</span> b_proj <span style="color:#f92672">-</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>abs(dist_third);
 
-            if (overlap_third &gt; 0)
+            <span style="color:#66d9ef">if</span> (overlap_third <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>)
             {
-               // project out of collision along the axis of least overlap
-               if (overlap_x &lt; overlap_y) {
-                  if (overlap_x &lt; overlap_third) {
-                     if (dist_x &gt; 0) {
-                        m.projection = vec2_t(overlap_x, 0); // x- axis is min
-                     }
-                     else {
-                        m.projection = vec2_t(-overlap_x, 0);
+               <span style="color:#75715e">// project out of collision along the axis of least overlap
+</span><span style="color:#75715e"></span>               <span style="color:#66d9ef">if</span> (overlap_x <span style="color:#f92672">&lt;</span> overlap_y) {
+                  <span style="color:#66d9ef">if</span> (overlap_x <span style="color:#f92672">&lt;</span> overlap_third) {
+                     <span style="color:#66d9ef">if</span> (dist_x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+                        m.projection <span style="color:#f92672">=</span> vec2_t(overlap_x, <span style="color:#ae81ff">0</span>); <span style="color:#75715e">// x- axis is min
+</span><span style="color:#75715e"></span>                     }
+                     <span style="color:#66d9ef">else</span> {
+                        m.projection <span style="color:#f92672">=</span> vec2_t(<span style="color:#f92672">-</span>overlap_x, <span style="color:#ae81ff">0</span>);
                      }
                   } 
-                  else { // third axis is min
-                     m.projection = 
-                        vec2_t(b-&gt;third_axis.x * overlap_third, 
-                               b-&gt;third_axis.y * overlap_third);
+                  <span style="color:#66d9ef">else</span> { <span style="color:#75715e">// third axis is min
+</span><span style="color:#75715e"></span>                     m.projection <span style="color:#f92672">=</span> 
+                        vec2_t(b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>third_axis.x <span style="color:#f92672">*</span> overlap_third, 
+                               b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>third_axis.y <span style="color:#f92672">*</span> overlap_third);
                   }
                }
-               else {
-                  if (overlap_y &lt; overlap_third) {
-                     if (dist_y &gt; 0) {
-                        m.projection = vec2_t(0, overlap_y); // y-axis is min   
-                     }
-                     else {
-                        m.projection = vec2_t(0, -overlap_y);
+               <span style="color:#66d9ef">else</span> {
+                  <span style="color:#66d9ef">if</span> (overlap_y <span style="color:#f92672">&lt;</span> overlap_third) {
+                     <span style="color:#66d9ef">if</span> (dist_y <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+                        m.projection <span style="color:#f92672">=</span> vec2_t(<span style="color:#ae81ff">0</span>, overlap_y); <span style="color:#75715e">// y-axis is min   
+</span><span style="color:#75715e"></span>                     }
+                     <span style="color:#66d9ef">else</span> {
+                        m.projection <span style="color:#f92672">=</span> vec2_t(<span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span>overlap_y);
                      }
                   } 
-                  else { // third axis is min
-                     m.projection = 
-                        vec2_t(b-&gt;third_axis.x * overlap_third, 
-                               b-&gt;third_axis.y * overlap_third);
+                  <span style="color:#66d9ef">else</span> { <span style="color:#75715e">// third axis is min
+</span><span style="color:#75715e"></span>                     m.projection <span style="color:#f92672">=</span> 
+                        vec2_t(b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>third_axis.x <span style="color:#f92672">*</span> overlap_third, 
+                               b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>third_axis.y <span style="color:#f92672">*</span> overlap_third);
                   }
                }
 
-               return true;
+               <span style="color:#66d9ef">return</span> true;
             }
          }
       }
    }
 
-   return false;
+   <span style="color:#66d9ef">return</span> false;
 }
 
-struct Manifold
+<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Manifold</span>
 {
-   PhysObj* a; // unowned pointer to a
-   PhysObj* b; // unowned pointer to b
-   vec3_t a_p; // position of a
-   vec3_t b_p; // position of b
-
-   bool resolve = false;
+   PhysObj<span style="color:#f92672">*</span> a; <span style="color:#75715e">// unowned pointer to a
+</span><span style="color:#75715e"></span>   PhysObj<span style="color:#f92672">*</span> b; <span style="color:#75715e">// unowned pointer to b
+</span><span style="color:#75715e"></span>   vec3_t a_p; <span style="color:#75715e">// position of a
+</span><span style="color:#75715e"></span>   vec3_t b_p; <span style="color:#75715e">// position of b
+</span><span style="color:#75715e"></span>
+   <span style="color:#66d9ef">bool</span> resolve <span style="color:#f92672">=</span> false;
    vec2_t projection;
    material_t material;
 };
-</code></pre>
-
-<h4 id="executing-a-shootout-in-standoff">~ Executing a Shootout in Standoff</h4>
-
-<pre><code class="language-c++">/* For each &quot;armed&quot; piece in play, mark the enemy piece closest to the shooter for
- * removal, accounting for both friendly obstacles to line-of-sight and piece's 
- * with two hit rays (slingers)
- */
-void Game_c::shootout()
+</code></pre></div><h4 id="-executing-a-shootout-in-standoff">~ Executing a Shootout in Standoff</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">/* For each &#34;armed&#34; piece in play, mark the enemy piece closest to the shooter for
+</span><span style="color:#75715e"> * removal, accounting for both friendly obstacles to line-of-sight and piece&#39;s 
+</span><span style="color:#75715e"> * with two hit rays (slingers)
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">void</span> Game_c<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shootout()
 {
-   std::vector&lt;PiecePtr&gt; live_pieces;
-   std::vector&lt;PiecePtr&gt; hit_pieces;
+   std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span> live_pieces;
+   std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span> hit_pieces;
 
-   std::vector&lt;PiecePtr&gt;::iterator p1_it;
-   for (p1_it = mPlayer1Pieces.begin(); p1_it != mPlayer1Pieces.end(); ++p1_it)
+   std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator p1_it;
+   <span style="color:#66d9ef">for</span> (p1_it <span style="color:#f92672">=</span> mPlayer1Pieces.begin(); p1_it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> mPlayer1Pieces.end(); <span style="color:#f92672">+</span><span style="color:#f92672">+</span>p1_it)
    {
-      if ((*p1_it)-&gt;getPlayState() == Piece_n::LIVE)
+      <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>p1_it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPlayState() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>LIVE)
       {
-         live_pieces.push_back(*p1_it);
+         live_pieces.push_back(<span style="color:#f92672">*</span>p1_it);
       }
    }
 
-   std::vector&lt;PiecePtr&gt;::iterator p2_it;
-   for (p2_it = mPlayer2Pieces.begin(); p2_it != mPlayer2Pieces.end(); ++p2_it)
+   std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator p2_it;
+   <span style="color:#66d9ef">for</span> (p2_it <span style="color:#f92672">=</span> mPlayer2Pieces.begin(); p2_it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> mPlayer2Pieces.end(); <span style="color:#f92672">+</span><span style="color:#f92672">+</span>p2_it)
    {
-      if ((*p2_it)-&gt;getPlayState() == Piece_n::LIVE)
+      <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>p2_it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPlayState() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>LIVE)
       {
-         live_pieces.push_back(*p2_it);
+         live_pieces.push_back(<span style="color:#f92672">*</span>p2_it);
       }
    }
 
-   std::vector&lt;PiecePtr&gt;::iterator it;
-   for (it = live_pieces.begin(); it != live_pieces.end(); ++it)
+   std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator it;
+   <span style="color:#66d9ef">for</span> (it <span style="color:#f92672">=</span> live_pieces.begin(); it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> live_pieces.end(); <span style="color:#f92672">+</span><span style="color:#f92672">+</span>it)
    {
-      if ((*it)-&gt;getPieceType() != Piece_n::PAWN)
+      <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPieceType() <span style="color:#f92672">!</span><span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>PAWN)
       {
-         Piece_n::Direction_e direction = (*it)-&gt;getDirection();
-         detectHit2(**it, direction, live_pieces);
+         Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Direction_e direction <span style="color:#f92672">=</span> (<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getDirection();
+         detectHit2(<span style="color:#f92672">*</span><span style="color:#f92672">*</span>it, direction, live_pieces);
 
-         if ((*it)-&gt;getPieceType() == Piece_n::SLINGER)
+         <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPieceType() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>SLINGER)
          {
-            Piece_n::Direction_e secondary_direction;
-            switch(direction)
+            Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Direction_e secondary_direction;
+            <span style="color:#66d9ef">switch</span>(direction)
             {
-               case Piece_n::UP : { secondary_direction = Piece_n::RIGHT; break; }
-               case Piece_n::DOWN : { secondary_direction = Piece_n::LEFT; break; }
-               case Piece_n::LEFT : { secondary_direction = Piece_n::UP; break; }
-               case Piece_n::RIGHT : { secondary_direction = Piece_n::DOWN; break; }
+               <span style="color:#66d9ef">case</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>UP : { secondary_direction <span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>RIGHT; <span style="color:#66d9ef">break</span>; }
+               <span style="color:#66d9ef">case</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>DOWN : { secondary_direction <span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>LEFT; <span style="color:#66d9ef">break</span>; }
+               <span style="color:#66d9ef">case</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>LEFT : { secondary_direction <span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>UP; <span style="color:#66d9ef">break</span>; }
+               <span style="color:#66d9ef">case</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>RIGHT : { secondary_direction <span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>DOWN; <span style="color:#66d9ef">break</span>; }
             }
-            detectHit2(**it, secondary_direction, live_pieces);
+            detectHit2(<span style="color:#f92672">*</span><span style="color:#f92672">*</span>it, secondary_direction, live_pieces);
          }
       }
    }
 }
 
-void Game_c::detectHit(Piece_n::Piece_c&amp; piece, 
-                       Piece_n::Direction_e direction,
-                       std::vector&lt;PiecePtr&gt;&amp; pieces)
+<span style="color:#66d9ef">void</span> Game_c<span style="color:#f92672">:</span><span style="color:#f92672">:</span>detectHit(Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Piece_c<span style="color:#f92672">&amp;</span> piece, 
+                       Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Direction_e direction,
+                       std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> pieces)
 {
-   // true once if we have already hit a piece (monodirectional)
-   bool hit_piece_flag = false;
+   <span style="color:#75715e">// true once if we have already hit a piece (monodirectional)
+</span><span style="color:#75715e"></span>   <span style="color:#66d9ef">bool</span> hit_piece_flag <span style="color:#f92672">=</span> false;
 
-   // stores the hit piece closest to the shooter
-   PiecePtr hit_piece;
+   <span style="color:#75715e">// stores the hit piece closest to the shooter
+</span><span style="color:#75715e"></span>   PiecePtr hit_piece;
 
-   switch (direction)
+   <span style="color:#66d9ef">switch</span> (direction)
    {
-      case Piece_n::UP :
+      <span style="color:#66d9ef">case</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>UP :
       {
-         std::vector&lt;PiecePtr&gt;::iterator it;
-         for (it = pieces.begin(); it != pieces.end(); ++it)
+         std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator it;
+         <span style="color:#66d9ef">for</span> (it <span style="color:#f92672">=</span> pieces.begin(); it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> pieces.end(); <span style="color:#f92672">+</span><span style="color:#f92672">+</span>it)
          {
-            if ((*it)-&gt;getPlayState() == Piece_n::LIVE)
+            <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPlayState() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>LIVE)
             {
-               if ((*it)-&gt;getPosition().first == piece.getPosition().first &amp;&amp;
-                   (*it)-&gt;getPosition().second &lt; piece.getPosition().second)
+               <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPosition().first <span style="color:#f92672">=</span><span style="color:#f92672">=</span> piece.getPosition().first <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
+                   (<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPosition().second <span style="color:#f92672">&lt;</span> piece.getPosition().second)
                {
-                  if (hit_piece_flag)
+                  <span style="color:#66d9ef">if</span> (hit_piece_flag)
                   {
-                     if ((*it)-&gt;getPosition().second &gt; hit_piece-&gt;getPosition().second)
+                     <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPosition().second <span style="color:#f92672">&gt;</span> hit_piece<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPosition().second)
                      {
-                        hit_piece = *it;
+                        hit_piece <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>it;
                      }
                   }
-                  else
+                  <span style="color:#66d9ef">else</span>
                   {
-                     hit_piece = *it;
-                     hit_piece_flag = true;
+                     hit_piece <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>it;
+                     hit_piece_flag <span style="color:#f92672">=</span> true;
                   }
                }
             }
          }
-         break;
+         <span style="color:#66d9ef">break</span>;
       }
-      // ... case for each other possible piece direction: DOWN, LEFT, RIGHT
-   }
-   if (piece.getTeam() != hit_piece-&gt;getTeam())
+      <span style="color:#75715e">// ... case for each other possible piece direction: DOWN, LEFT, RIGHT
+</span><span style="color:#75715e"></span>   }
+   <span style="color:#66d9ef">if</span> (piece.getTeam() <span style="color:#f92672">!</span><span style="color:#f92672">=</span> hit_piece<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getTeam())
    {
-      hit_piece-&gt;nextPlayState();
+      hit_piece<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>nextPlayState();
    }
 }
-</code></pre>
-
+</code></pre></div>
 </main>
 
 
@@ -345,13 +338,13 @@ void Game_c::detectHit(Piece_n::Piece_c&amp; piece,
       <div class="container">
 
       <div class="copyright">
-        Copyright © 2017 Will Gueble. All Rights Reserved.
+        Copyright © 2020 Zade Gueble. All Rights Reserved.
       </div>
 
       <div class="icons">
 
         
-           <a href="mailto:will.gueble@gmail.com">
+           <a href="mailto:zade.gueble@gmail.com">
               <img class="icon" src="https://grueble.github.io/img/email.svg" alt="email" />
            </a>
         
@@ -363,7 +356,7 @@ void Game_c::detectHit(Piece_n::Piece_c&amp; piece,
         
   
         
-           <a href="https://www.linkedin.com/in/will-gueble-2b0b8850" target="_blank">
+           <a href="https://www.linkedin.com/in/zade-gueble-2b0b8850" target="_blank">
               <img class="icon" src="https://grueble.github.io/img/linkedin.svg" alt="linkedin" />
            </a>
         

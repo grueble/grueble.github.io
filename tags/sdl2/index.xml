@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Sdl2 on Will Gueble</title>
+    <title>SDL2 on Zade Gueble</title>
     <link>https://grueble.github.io/tags/sdl2/</link>
-    <description>Recent content in Sdl2 on Will Gueble</description>
+    <description>Recent content in SDL2 on Zade Gueble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <copyright>Copyright © 2017 Will Gueble. All Rights Reserved.</copyright>
     <lastBuildDate>Mon, 12 Jun 2017 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://grueble.github.io/tags/sdl2/index.xml" rel="self" type="application/rss+xml" />

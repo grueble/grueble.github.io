@@ -15,7 +15,7 @@
     <meta name="description" content="Blog &amp; Portfolio Website">
     
 
-    <title>Humble Beginnings | Will Gueble</title>
+    <title>Humble Beginnings | Zade Gueble</title>
 
     <link rel="stylesheet" href="https://grueble.github.io/css/style.css" />
     <link rel="stylesheet" href="https://grueble.github.io/css/fonts.css" />
@@ -31,7 +31,7 @@
       
       
       <li class="pull-left ">
-        <a href="https://grueble.github.io/">/home/will gueble</a>
+        <a href="https://grueble.github.io/">/home/zade gueble</a>
       </li>
       
       
@@ -116,72 +116,52 @@
 
 <main>
    <p>I wanted to mark this moment as my first major milestone on the way to a completed game.</p>
-
-<div class="movie">
-   <video width="672" controls>
-      <source src="https://grueble.github.io/img/wasteland-milestone-1.1.mp4" type="video/mp4">
-   </video>
-</div>
-
+<!-- raw HTML omitted -->
 <p>Each unique image displayed on screen belongs to a managed game object, with seperate components to handle input, physics, and graphics. In the future, any sound effects or music will be handled by an audio component attached in a similar fashion. The component design pattern was a tip from the Robert Nystrom&rsquo;s <a href="http://gameprogrammingpatterns.com/component.html"><em>Game Programming Patterns</em></a>.</p>
-
 <p>The game&rsquo;s base logic revolves around a modifed Scene Graph design. The entire world is updated during each loop iteration, changing the positions of any objects that will be rendered to screen at the bottom of the loop. The use of a graph design allows for rudimentary space partioning; nearby objects are related hierarchically for both physical and graphical purposes, with the root node managing ownership of the entire world. I found that QuadTree&rsquo;s and beyond were not necessary to get my prototype off the ground, but I have left space should they become necessary in the future.</p>
-
 <p>The input component serves as a placeholder for my AI logic. Both the player and any NPCs will be controlled by a set of commands owned by each object&rsquo;s input component.</p>
-
 <p>Physics simulation is handled with the help of the Separating Axis Theorem (SAT). For this reason, I have restricted my design to include only Axis-Aligned objects and Circles. <a href="http://www.metanetsoftware.com/technique/tutorialA.html#section0">This</a> tutorial proved most helpful in getting my design off the ground. At the present moment, only Axis-Aligned Bounding Boxes (AABBs) and Axis-Aligned Right Triangles have been implemented - despite the player&rsquo;s circular appearance, it is coded as an AABB. Collisions are resolved by projection along the axis of least overlap.</p>
-
 <p>The following code snippet features my algorithm for detection a collision between two AABBs. The projection vector is added to the colliding object&rsquo;s position in order to move it out of penetration. Additional collision algorithms can be found on my <a href="https://github.com/grueble/Wasteland/blob/master/PhysEngine.cpp">github</a>.</p>
-
-<pre><code class="language-c++">bool AABBvsAABB(Manifold&amp; m)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">AABBvsAABB</span>(Manifold<span style="color:#f92672">&amp;</span> m)
 {
-   AABB_t* a = m.a-&gt;asAABB();
-   AABB_t* b = m.b-&gt;asAABB();
+   AABB_t<span style="color:#f92672">*</span> a <span style="color:#f92672">=</span> m.a<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>asAABB();
+   AABB_t<span style="color:#f92672">*</span> b <span style="color:#f92672">=</span> m.b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>asAABB();
 
-   float dist_x = m.a_p.x - m.b_p.x;
-   float a_proj = scalar_proj(a-&gt;xw, X_AXIS);
-   float b_proj = scalar_proj(b-&gt;xw, X_AXIS);
-   float overlap_x = a_proj + b_proj - std::abs(dist_x);
-   if (overlap_x &gt; 0) { // test for projection overlap along the x-axis
-      float dist_y = m.a_p.y - m.b_p.y;
-      a_proj = scalar_proj(a-&gt;yw, Y_AXIS);
-      b_proj = scalar_proj(b-&gt;yw, Y_AXIS);
-      float overlap_y = a_proj + b_proj - std::abs(dist_y);
-      if (overlap_y &gt; 0) { // test for projection overlap along the y-axis
-         // project out of collision along the axis of least overlap
-         if (overlap_x &lt; overlap_y) { 
-            if (dist_x &gt; 0) { 
-               m.proj = vec2_t(overlap_x, 0); // x-axis is min
-            }
-            else {
-               m.proj = vec2_t(-overlap_x, 0);
-            }
-         }
-         else {
-            if (dist_y &gt; 0) {
-               m.proj = vec2_t(0, overlap_y); // y-axis is min 
-            }
-            else {
-               m.proj = vec2_t(0, -overlap_y);
+   <span style="color:#66d9ef">float</span> dist_x <span style="color:#f92672">=</span> m.a_p.x <span style="color:#f92672">-</span> m.b_p.x;
+   <span style="color:#66d9ef">float</span> a_proj <span style="color:#f92672">=</span> scalar_proj(a<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>xw, X_AXIS);
+   <span style="color:#66d9ef">float</span> b_proj <span style="color:#f92672">=</span> scalar_proj(b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>xw, X_AXIS);
+   <span style="color:#66d9ef">float</span> overlap_x <span style="color:#f92672">=</span> a_proj <span style="color:#f92672">+</span> b_proj <span style="color:#f92672">-</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>abs(dist_x);
+   <span style="color:#66d9ef">if</span> (overlap_x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) { <span style="color:#75715e">// test for projection overlap along the x-axis
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">float</span> dist_y <span style="color:#f92672">=</span> m.a_p.y <span style="color:#f92672">-</span> m.b_p.y;
+      a_proj <span style="color:#f92672">=</span> scalar_proj(a<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>yw, Y_AXIS);
+      b_proj <span style="color:#f92672">=</span> scalar_proj(b<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>yw, Y_AXIS);
+      <span style="color:#66d9ef">float</span> overlap_y <span style="color:#f92672">=</span> a_proj <span style="color:#f92672">+</span> b_proj <span style="color:#f92672">-</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>abs(dist_y);
+      <span style="color:#66d9ef">if</span> (overlap_y <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) { <span style="color:#75715e">// test for projection overlap along the y-axis
+</span><span style="color:#75715e"></span>         <span style="color:#75715e">// project out of collision along the axis of least overlap
+</span><span style="color:#75715e"></span>         <span style="color:#66d9ef">if</span> (overlap_x <span style="color:#f92672">&lt;</span> overlap_y) { 
+            <span style="color:#66d9ef">if</span> (dist_x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) { 
+               m.proj <span style="color:#f92672">=</span> vec2_t(overlap_x, <span style="color:#ae81ff">0</span>); <span style="color:#75715e">// x-axis is min
+</span><span style="color:#75715e"></span>            }
+            <span style="color:#66d9ef">else</span> {
+               m.proj <span style="color:#f92672">=</span> vec2_t(<span style="color:#f92672">-</span>overlap_x, <span style="color:#ae81ff">0</span>);
             }
          }
-         return true;
+         <span style="color:#66d9ef">else</span> {
+            <span style="color:#66d9ef">if</span> (dist_y <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+               m.proj <span style="color:#f92672">=</span> vec2_t(<span style="color:#ae81ff">0</span>, overlap_y); <span style="color:#75715e">// y-axis is min 
+</span><span style="color:#75715e"></span>            }
+            <span style="color:#66d9ef">else</span> {
+               m.proj <span style="color:#f92672">=</span> vec2_t(<span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span>overlap_y);
+            }
+         }
+         <span style="color:#66d9ef">return</span> true;
       }
    }
-   return false;
+   <span style="color:#66d9ef">return</span> false;
 }
-</code></pre>
-
-<p>The graphics module leverages the OpenGL API. At startup, I load each objects vertices into a mesh object, rendering with glDrawElements during each loop&rsquo;s call to update. The application currently runs at 60FPS, but I have yet to test the limits of the engine. The graphics module contains several avenues for performance improvements, but I have postponed that work until the need arises. My textures are encoded in RGBA format - I use the alpha channel in order to render circular objects using two triangles. The screen positions of each object are updated via matrix transformations during each loop&rsquo;s call to update.</p>
-
-<div class="movie">
-   <video width="672" controls>
-      <source src="https://grueble.github.io/img/wasteland-milestone-1.2.mp4" type="video/mp4">
-   </video>
-</div>
-
+</code></pre></div><p>The graphics module leverages the OpenGL API. At startup, I load each objects vertices into a mesh object, rendering with glDrawElements during each loop&rsquo;s call to update. The application currently runs at 60FPS, but I have yet to test the limits of the engine. The graphics module contains several avenues for performance improvements, but I have postponed that work until the need arises. My textures are encoded in RGBA format - I use the alpha channel in order to render circular objects using two triangles. The screen positions of each object are updated via matrix transformations during each loop&rsquo;s call to update.</p>
+<!-- raw HTML omitted -->
 <p>I included this video to discuss a neat trick I used to describe triangles. Any game object&rsquo;s position field is stored at the highest level of the entity, allowing for it&rsquo;s use within each separate component. This meant that my hitboxes could not contain a position, to avoid unnecessary calculation. I decided to represent objects by their halfwidth vectors. For AABB&rsquo;s, this is quite beneficial, as the halfwidth vectors can be used during generalized SAT collision detection. I wanted to store triangles as a pair of legs, in addition to the precomputed third axis used by the SAT (a normalized direction vector). In order to keep these physics objects as lighweight as possible, I wanted to find a way to avoid using any other data fields, such as a direction. To this end, I use the sign of halfwidth vectors to indicate their direction, accounting for this decision in my collision algorithm. The above video demonstrates collision with triangles from several directions.</p>
-
 <p>The code for this project can be found on my github within the &lsquo;<a href="https://github.com/grueble/Wasteland">Wasteland</a>&rsquo; repository.</p>
 
 </main>
@@ -195,13 +175,13 @@
       <div class="container">
 
       <div class="copyright">
-        Copyright © 2017 Will Gueble. All Rights Reserved.
+        Copyright © 2020 Zade Gueble. All Rights Reserved.
       </div>
 
       <div class="icons">
 
         
-           <a href="mailto:will.gueble@gmail.com">
+           <a href="mailto:zade.gueble@gmail.com">
               <img class="icon" src="https://grueble.github.io/img/email.svg" alt="email" />
            </a>
         
@@ -213,7 +193,7 @@
         
   
         
-           <a href="https://www.linkedin.com/in/will-gueble-2b0b8850" target="_blank">
+           <a href="https://www.linkedin.com/in/zade-gueble-2b0b8850" target="_blank">
               <img class="icon" src="https://grueble.github.io/img/linkedin.svg" alt="linkedin" />
            </a>
         

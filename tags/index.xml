@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Will Gueble</title>
+    <title>Tags on Zade Gueble</title>
     <link>https://grueble.github.io/tags/</link>
-    <description>Recent content in Tags on Will Gueble</description>
+    <description>Recent content in Tags on Zade Gueble</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <copyright>Copyright © 2017 Will Gueble. All Rights Reserved.</copyright>
     <lastBuildDate>Sun, 26 Nov 2017 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://grueble.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
@@ -31,6 +30,15 @@
     </item>
     
     <item>
+      <title>OpenGL</title>
+      <link>https://grueble.github.io/tags/opengl/</link>
+      <pubDate>Thu, 28 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://grueble.github.io/tags/opengl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Networking</title>
       <link>https://grueble.github.io/tags/networking/</link>
       <pubDate>Tue, 13 Jun 2017 00:00:00 +0000</pubDate>
@@ -40,16 +48,7 @@
     </item>
     
     <item>
-      <title>Opengl</title>
-      <link>https://grueble.github.io/tags/opengl/</link>
-      <pubDate>Thu, 28 Sep 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://grueble.github.io/tags/opengl/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Sdl2</title>
+      <title>SDL2</title>
       <link>https://grueble.github.io/tags/sdl2/</link>
       <pubDate>Mon, 12 Jun 2017 00:00:00 +0000</pubDate>
       

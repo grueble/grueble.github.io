@@ -15,7 +15,7 @@
     <meta name="description" content="Blog &amp; Portfolio Website">
     
 
-    <title>Application Logic | Will Gueble</title>
+    <title>Application Logic | Zade Gueble</title>
 
     <link rel="stylesheet" href="https://grueble.github.io/css/style.css" />
     <link rel="stylesheet" href="https://grueble.github.io/css/fonts.css" />
@@ -31,7 +31,7 @@
       
       
       <li class="pull-left ">
-        <a href="https://grueble.github.io/">/home/will gueble</a>
+        <a href="https://grueble.github.io/">/home/zade gueble</a>
       </li>
       
       
@@ -112,8 +112,7 @@
 
 <main>
    <p>I now had code written for both the game logic and graphics capabilities, so it was time to put the finishing touches on my application’s first draft. The ‘StandoffApp’ class encapsulates this functionality, marrying together all of the disparate pieces that I had already developed. LazyFoo’s tutorial series proved to be essential once again, this time providing me with a <a href="http://lazyfoo.net/tutorials/SDL/04_key_presses/index.php">structural template</a> on which to base my SDL_Event input handling loop.</p>
-
-<pre><code class="language-c++">enum Action_e
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">Action_e</span>
 {
    NONE,
    PRE_DEPLOY,
@@ -122,55 +121,47 @@
    ROTATE,
    SHOOTOUT,
 };
-</code></pre>
-
-<pre><code class="language-c++">void StandoffApp_c::handleLmbDown(const SDL_Event&amp; e)
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">void</span> StandoffApp_c<span style="color:#f92672">:</span><span style="color:#f92672">:</span>handleLmbDown(<span style="color:#66d9ef">const</span> SDL_Event<span style="color:#f92672">&amp;</span> e)
 {
-   if (mCurrentGame.getCurrentMove().mCurrentAction == Game_n::NONE) {
-      /* transform the mouse click event's coordinate in pixels into a
-       * &quot;screen tile&quot; coordinate - for reference, the board's upper left
-       * hand corner is at (1, 4) in the &quot;screen tile&quot; coordinate system
-       */
-      std::pair&lt;int, int&gt; screen_tile_coord =
-         std::make_pair(e.button.x / ResourceManager_n::TILE_WIDTH,
-            e.button.y / ResourceManager_n::TILE_WIDTH);
+   <span style="color:#66d9ef">if</span> (mCurrentGame.getCurrentMove().mCurrentAction <span style="color:#f92672">=</span><span style="color:#f92672">=</span> Game_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>NONE) {
+      <span style="color:#75715e">/* transform the mouse click event&#39;s coordinate in pixels into a
+</span><span style="color:#75715e">       * &#34;screen tile&#34; coordinate - for reference, the board&#39;s upper left
+</span><span style="color:#75715e">       * hand corner is at (1, 4) in the &#34;screen tile&#34; coordinate system
+</span><span style="color:#75715e">       */</span>
+      std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>pair<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> screen_tile_coord <span style="color:#f92672">=</span>
+         std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>make_pair(e.button.x <span style="color:#f92672">/</span> ResourceManager_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>TILE_WIDTH,
+            e.button.y <span style="color:#f92672">/</span> ResourceManager_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>TILE_WIDTH);
 
-      /* loop through the current player's available pieces (either in reserve
-       * or in play) to determine if the mouse click event selects a piece
-       */
-      bool piece_hit_flag = false;
-      const std::vector&lt;Game_n::PiecePtr&gt;&amp; pieces = (mCurrentGame.mCurrentTurn % 2)
-                                                    ? mCurrentGame.getPlayer1Pieces()
-                                                    : mCurrentGame.getPlayer2Pieces();
-      std::vector&lt;Game_n::PiecePtr&gt;::const_iterator it;
-      for (it = pieces.begin(); it != pieces.end(); ++it)
+      <span style="color:#75715e">/* loop through the current player&#39;s available pieces (either in reserve
+</span><span style="color:#75715e">       * or in play) to determine if the mouse click event selects a piece
+</span><span style="color:#75715e">       */</span>
+      <span style="color:#66d9ef">bool</span> piece_hit_flag <span style="color:#f92672">=</span> false;
+      <span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>Game_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>PiecePtr<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> pieces <span style="color:#f92672">=</span> (mCurrentGame.mCurrentTurn <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>)
+                                                    <span style="color:#f92672">?</span> mCurrentGame.getPlayer1Pieces()
+                                                    <span style="color:#f92672">:</span> mCurrentGame.getPlayer2Pieces();
+      std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>Game_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>PiecePtr<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>const_iterator it;
+      <span style="color:#66d9ef">for</span> (it <span style="color:#f92672">=</span> pieces.begin(); it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> pieces.end(); <span style="color:#f92672">+</span><span style="color:#f92672">+</span>it)
       {
-         if ((*it)-&gt;getPosition() == screen_tile_coord &amp;&amp; 
-             (*it)-&gt;getPlayState() != Piece_n::DEAD) {
-            mCurrentGame.setCurrentPiece(*it);
-            piece_hit_flag = true;
+         <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPosition() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> screen_tile_coord <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> 
+             (<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPlayState() <span style="color:#f92672">!</span><span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>DEAD) {
+            mCurrentGame.setCurrentPiece(<span style="color:#f92672">*</span>it);
+            piece_hit_flag <span style="color:#f92672">=</span> true;
          }
       }
 
-      /* if we did not hit a piece with this click AND a piece is already
-       * selected, attempt to move the current piece to the click position
-       */
-      if (!piece_hit_flag &amp;&amp; mCurrentGame.getCurrentPiece() != nullptr) {
+      <span style="color:#75715e">/* if we did not hit a piece with this click AND a piece is already
+</span><span style="color:#75715e">       * selected, attempt to move the current piece to the click position
+</span><span style="color:#75715e">       */</span>
+      <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>piece_hit_flag <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> mCurrentGame.getCurrentPiece() <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>) {
          mCurrentGame.move(screen_tile_coord);
       }
    }
 }
-</code></pre>
-
-<p>The Standoff application functions essentially as a state machine. Once initiated, the game’s main processing loop serves to regulate the set of actions available to the user. The state of the application is determined by two factors: the current action - represented by the Action_e enumeration - and the current turn. Each particular state only allows for the input of certain commands, so the state machine’s progression always proceeds in a deterministic manner. The input handling algorithms - StandoffApp::handleLmbDown and handleKeyDown - provide the validations necessary to ensure that only the appropriate actions are accepted, preventing the state machine from becoming stuck.</p>
-
+</code></pre></div><p>The Standoff application functions essentially as a state machine. Once initiated, the game’s main processing loop serves to regulate the set of actions available to the user. The state of the application is determined by two factors: the current action - represented by the Action_e enumeration - and the current turn. Each particular state only allows for the input of certain commands, so the state machine’s progression always proceeds in a deterministic manner. The input handling algorithms - StandoffApp::handleLmbDown and handleKeyDown - provide the validations necessary to ensure that only the appropriate actions are accepted, preventing the state machine from becoming stuck.</p>
 <p>After a call to StandoffApp::draw on startup, each iteration of the main loop features a redrawing of the board and pieces. The drawing routine only recognizes pieces that are in play or in reserve; dead pieces remain on the board, to be cleaned up upon exit. The draw method itself simply invokes the ResourceManager’s renderSpriteAt (link to prev page) function for each appropriate piece, in addition to the cursor and the briefcase.</p>
-
-<p><img src="https://grueble.github.io/img/standoff-revert-move.gif" alt="Reverting a Move" /></p>
-
+<p><img src="https://grueble.github.io/img/standoff-revert-move.gif" alt="Reverting a Move"></p>
 <p>I made sure to include the ability revert a move in an attempt to compensate for the application’s clunky controls. Deploying a piece in particular can require a couple tries to get right, given that this action requires both move and rotate commands to be input in the correct order. Still, the rest of the game’s mechanics feel polished enough, at least for a first pass. The first testing phase has already revealed an array of possible alterations that could be made in the interest of streamlining gameplay.</p>
-
-<p><img src="https://grueble.github.io/img/standoff-deployment.gif" alt="Deployment" /></p>
+<p><img src="https://grueble.github.io/img/standoff-deployment.gif" alt="Deployment"></p>
 
 </main>
 
@@ -211,13 +202,13 @@
       <div class="container">
 
       <div class="copyright">
-        Copyright © 2017 Will Gueble. All Rights Reserved.
+        Copyright © 2020 Zade Gueble. All Rights Reserved.
       </div>
 
       <div class="icons">
 
         
-           <a href="mailto:will.gueble@gmail.com">
+           <a href="mailto:zade.gueble@gmail.com">
               <img class="icon" src="https://grueble.github.io/img/email.svg" alt="email" />
            </a>
         
@@ -229,7 +220,7 @@
         
   
         
-           <a href="https://www.linkedin.com/in/will-gueble-2b0b8850" target="_blank">
+           <a href="https://www.linkedin.com/in/zade-gueble-2b0b8850" target="_blank">
               <img class="icon" src="https://grueble.github.io/img/linkedin.svg" alt="linkedin" />
            </a>
         

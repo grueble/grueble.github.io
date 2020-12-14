@@ -15,7 +15,7 @@
     <meta name="description" content="Blog &amp; Portfolio Website">
     
 
-    <title>Graphics with SDL | Will Gueble</title>
+    <title>Graphics with SDL | Zade Gueble</title>
 
     <link rel="stylesheet" href="https://grueble.github.io/css/style.css" />
     <link rel="stylesheet" href="https://grueble.github.io/css/fonts.css" />
@@ -31,7 +31,7 @@
       
       
       <li class="pull-left ">
-        <a href="https://grueble.github.io/">/home/will gueble</a>
+        <a href="https://grueble.github.io/">/home/zade gueble</a>
       </li>
       
       
@@ -116,115 +116,99 @@
 
 <main>
    <p>With a rough version of the game’s core mechanics in hand, I arrived at the first major hurdle of my development process - integration of a graphics API. It wouldn’t have made sense to invest any more time in iterating through mechanical variations on the main loop without a fully testable prototype; debugging with the command line can only take you so far.
-After some deliberation, I settled on the latest version of <em>Simple DirectMedia Layer</em> development library (SDL 2.0 | <a href="https://www.libsdl.org/">https://www.libsdl.org/</a>). From the site:</p>
-
+After some deliberation, I settled on the latest version of <em>Simple DirectMedia Layer</em> development library (SDL 2.0 | <a href="https://www.libsdl.org/)">https://www.libsdl.org/)</a>. From the site:</p>
 <blockquote>
 <p>“[SDL] is a cross-platform development library designed to provide low level access to audio, mouse, joystick, and graphics hardware via OpenGL and Direct3D… SDL officially supports Windows, Mac OS X, Linux, iOS, and Android… SDL is written in C, [and] works natively with C++.”</p>
 </blockquote>
-
 <p>Cross-platform compatibility is a reality of the game development industry, so I wanted a first-hand experience tuning my game for a diverse array of devices. I also want all my games to be available for friends to enjoy, so cross-platform has always been a goal.</p>
-
 <p>SDL’s hardware-based rendering also saves big on processor resources. In the end, time complexity was not a major constraint on the Standoff project. Still, developing for the lowest common denominator was a worthwhile exercise - in the future, I may end up expanding on the Standoff resource management module for use in projects with a greater need for efficiency.</p>
-
 <p>I turned to LazyFoo’s SDL tutorial series (<a href="http://lazyfoo.net/tutorials/SDL/">http://lazyfoo.net/tutorials/SDL/</a>) to bring me up to speed on the basics of using SDL. I chose to encapsulate the application’s graphical functionality within a ‘ResourceManager’ class:</p>
-
-<pre><code class="language-c++">class ResourceManager_c
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ResourceManager_c</span>
 {
-public:
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
    ResourceManager_c();
 
-   ~ResourceManager_c();
+   <span style="color:#f92672">~</span>ResourceManager_c();
 
-   bool init();
+   <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">init</span>();
 
-   bool loadMedia();
+   <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">loadMedia</span>();
 
-   void close();
+   <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">close</span>();
 
-   SDL_Renderer* getRenderer();
+   SDL_Renderer<span style="color:#f92672">*</span> <span style="color:#a6e22e">getRenderer</span>();
 
-   void renderSpriteAt(Sprite_e sprite_id, 
-      const std::pair&lt;int, int&gt;&amp; screen_tile_coord, double degrees = 0);
+   <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">renderSpriteAt</span>(Sprite_e sprite_id, 
+      <span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>pair<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> screen_tile_coord, <span style="color:#66d9ef">double</span> degrees <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>);
 
-protected:
-   void createSpriteMap();
+<span style="color:#66d9ef">protected</span><span style="color:#f92672">:</span>
+   <span style="color:#66d9ef">void</span> createSpriteMap();
 
-   // member variables
-};
-</code></pre>
-
-<p>My first priority was to delineate the window’s lifetime with initialization and garbage collection routines. These processes are represented by the ResourceManager_c::init() and close() methods, respectively. The former contains the start calls and validations required by the SDL library, while the latter frees memory allocated to the necessary raw pointers. This formulation already highlights one of the challenges in using SDL - namely, the need for raw pointers. Once again, my naive attempts to store a vector of pointers were met with frustration, but this time I was able to receive assistance from LazyFoo’s tutorials.</p>
-
-<pre><code class="language-c++">class LTexture
+   <span style="color:#75715e">// member variables
+</span><span style="color:#75715e"></span>};
+</code></pre></div><p>My first priority was to delineate the window’s lifetime with initialization and garbage collection routines. These processes are represented by the ResourceManager_c::init() and close() methods, respectively. The former contains the start calls and validations required by the SDL library, while the latter frees memory allocated to the necessary raw pointers. This formulation already highlights one of the challenges in using SDL - namely, the need for raw pointers. Once again, my naive attempts to store a vector of pointers were met with frustration, but this time I was able to receive assistance from LazyFoo’s tutorials.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LTexture</span>
 {
-public:
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
    LTexture();
 
-   ~LTexture();
+   <span style="color:#f92672">~</span>LTexture();
 
-   bool loadFromFile(SDL_Renderer* renderer, std::string img_path);
+   <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">loadFromFile</span>(SDL_Renderer<span style="color:#f92672">*</span> renderer, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string img_path);
 
-   void free();
+   <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">free</span>();
 
-   void render(SDL_Renderer* renderer, SDL_Rect* dest_rect, 
-               SDL_Rect* clip = NULL, double degrees = 0);
-private:
-   SDL_Texture* mTexture;
+   <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">render</span>(SDL_Renderer<span style="color:#f92672">*</span> renderer, SDL_Rect<span style="color:#f92672">*</span> dest_rect, 
+               SDL_Rect<span style="color:#f92672">*</span> clip <span style="color:#f92672">=</span> NULL, <span style="color:#66d9ef">double</span> degrees <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>);
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+   SDL_Texture<span style="color:#f92672">*</span> mTexture;
 };
-</code></pre>
-
-<p>It was in this way that I arrived at most elegant approach of my experiments with memory management - the LTexture class - packing the flexibility of a raw pointer alongside a suite of all relevant functions. This class acts as a wrapper for a raw SDL_Texture pointer, and allows the generalized ResourceManager to interface with each texture in turn.</p>
-
-<pre><code class="language-c++">LTexture::LTexture()
+</code></pre></div><p>It was in this way that I arrived at most elegant approach of my experiments with memory management - the LTexture class - packing the flexibility of a raw pointer alongside a suite of all relevant functions. This class acts as a wrapper for a raw SDL_Texture pointer, and allows the generalized ResourceManager to interface with each texture in turn.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">LTexture<span style="color:#f92672">:</span><span style="color:#f92672">:</span>LTexture()
 {
-   mTexture = NULL;
+   mTexture <span style="color:#f92672">=</span> NULL;
 }
 
-LTexture::~LTexture()
+LTexture<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>LTexture()
 {
    free();
 }
 
-bool LTexture::loadFromFile(SDL_Renderer* renderer, std::string img_path)
+<span style="color:#66d9ef">bool</span> LTexture<span style="color:#f92672">:</span><span style="color:#f92672">:</span>loadFromFile(SDL_Renderer<span style="color:#f92672">*</span> renderer, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string img_path)
 {
-   // get rid of any pre-existing texture
-   free();
+   <span style="color:#75715e">// get rid of any pre-existing texture
+</span><span style="color:#75715e"></span>   free();
 
-   bool success = true;
-   SDL_Texture* loaded_texture = NULL;
+   <span style="color:#66d9ef">bool</span> success <span style="color:#f92672">=</span> true;
+   SDL_Texture<span style="color:#f92672">*</span> loaded_texture <span style="color:#f92672">=</span> NULL;
 
-   loaded_texture = IMG_LoadTexture(renderer, img_path.c_str());               
-   if (loaded_texture == NULL) { 
+   loaded_texture <span style="color:#f92672">=</span> IMG_LoadTexture(renderer, img_path.c_str());               
+   <span style="color:#66d9ef">if</span> (loaded_texture <span style="color:#f92672">=</span><span style="color:#f92672">=</span> NULL) { 
       printf(
-         &quot;Unable to load texture %s! SDL_image Error: %s\n&quot;, 
+         <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Unable to load texture %s! SDL_image Error: %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, 
          img_path.c_str(), IMG_GetError());
-      success = false;
+      success <span style="color:#f92672">=</span> false;
    }
-   else {
-      mTexture = loaded_texture;
+   <span style="color:#66d9ef">else</span> {
+      mTexture <span style="color:#f92672">=</span> loaded_texture;
    }
    
-   return success;
+   <span style="color:#66d9ef">return</span> success;
 }
 
-void LTexture::free()
+<span style="color:#66d9ef">void</span> LTexture<span style="color:#f92672">:</span><span style="color:#f92672">:</span>free()
 {
-   if (mTexture != NULL) {
+   <span style="color:#66d9ef">if</span> (mTexture <span style="color:#f92672">!</span><span style="color:#f92672">=</span> NULL) {
       SDL_DestroyTexture(mTexture);
-      mTexture = NULL;
+      mTexture <span style="color:#f92672">=</span> NULL;
    }
 }
-</code></pre>
-
-<p>The loadFromFile() and free() methods serve to control the life cycle of LTexture’s owned SDL_Texture object. The former is invoked by the ResourceManager in order to initialize the desired textures that are to be stored as member variables. The latter is called in the destructor, ensuring that the object is destroyed upon going out of scope. These routines leverage SDL_image (SDL_image 2.0 | <a href="https://www.libsdl.org/projects/SDL_image/">https://www.libsdl.org/projects/SDL_image/</a>), an image file loading library built as an extension to the base SDL library. IMG_LoadTexture() in particular is taken from the SDL_image library; the method is dynamically loaded at runtime based on an associated .dll file, and can be configured to handle files of many of the most common image file types. The flexibility provided by this library was one of the many reasons why I chose to use SDL in the first place.</p>
-
-<hr>
-
-<p><img src="https://grueble.github.io/img/graphics_w_sdl_04.png" alt="Spritesheet" /></p>
-
-<pre><code class="language-c++">struct Sprite_s
+</code></pre></div><p>The loadFromFile() and free() methods serve to control the life cycle of LTexture’s owned SDL_Texture object. The former is invoked by the ResourceManager in order to initialize the desired textures that are to be stored as member variables. The latter is called in the destructor, ensuring that the object is destroyed upon going out of scope. These routines leverage SDL_image (SDL_image 2.0 | <a href="https://www.libsdl.org/projects/SDL_image/),">https://www.libsdl.org/projects/SDL_image/),</a> an image file loading library built as an extension to the base SDL library. IMG_LoadTexture() in particular is taken from the SDL_image library; the method is dynamically loaded at runtime based on an associated .dll file, and can be configured to handle files of many of the most common image file types. The flexibility provided by this library was one of the many reasons why I chose to use SDL in the first place.</p>
+<!-- raw HTML omitted -->
+<p><img src="https://grueble.github.io/img/graphics_w_sdl_04.png" alt="Spritesheet"></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Sprite_s</span>
 {
-   Sprite_s(Sprite_e sprite_id, SDL_Rect clip) :
+   Sprite_s(Sprite_e sprite_id, SDL_Rect clip) <span style="color:#f92672">:</span>
       mSpriteId(sprite_id),
       mClip(clip)
    { }
@@ -232,85 +216,74 @@ void LTexture::free()
    Sprite_e mSpriteId;
    SDL_Rect mClip; 
 };
-</code></pre>
-
-<p>In the interest of minimizing the number of required textures, I chose to format my assets as a sprite sheet. This means that the ResourceManager only needs to load two textures at initialization - the board and the spritesheet. After loading the textures into memory, I call the ResourceManager_c::createSpriteMap() method to map individual sprites to a unique ID.</p>
-
-<pre><code class="language-c++">void ResourceManager_c::createSpriteMap()
+</code></pre></div><p>In the interest of minimizing the number of required textures, I chose to format my assets as a sprite sheet. This means that the ResourceManager only needs to load two textures at initialization - the board and the spritesheet. After loading the textures into memory, I call the ResourceManager_c::createSpriteMap() method to map individual sprites to a unique ID.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">void</span> ResourceManager_c<span style="color:#f92672">:</span><span style="color:#f92672">:</span>createSpriteMap()
 {
-   SDL_Rect clip = { 0, 0, TILE_WIDTH, TILE_WIDTH };
+   SDL_Rect clip <span style="color:#f92672">=</span> { <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, TILE_WIDTH, TILE_WIDTH };
 
-   for (int sprite_int = P2_PAWN; sprite_int != P2_MANHOLE_TILE; ++sprite_int)
+   <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> sprite_int <span style="color:#f92672">=</span> P2_PAWN; sprite_int <span style="color:#f92672">!</span><span style="color:#f92672">=</span> P2_MANHOLE_TILE; <span style="color:#f92672">+</span><span style="color:#f92672">+</span>sprite_int)
    {
-      mSprites.push_back(Sprite_s(static_cast&lt;Sprite_e&gt;(sprite_int), clip));
+      mSprites.push_back(Sprite_s(<span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>Sprite_e<span style="color:#f92672">&gt;</span>(sprite_int), clip));
 
-      if (clip.x &lt; TILE_WIDTH * NUM_SPRITESHEET_COL) {
-         clip.x = clip.x + TILE_WIDTH;
+      <span style="color:#66d9ef">if</span> (clip.x <span style="color:#f92672">&lt;</span> TILE_WIDTH <span style="color:#f92672">*</span> NUM_SPRITESHEET_COL) {
+         clip.x <span style="color:#f92672">=</span> clip.x <span style="color:#f92672">+</span> TILE_WIDTH;
       }
-      else  {
-         clip.x = 0;
-         clip.y = clip.y + TILE_WIDTH;
+      <span style="color:#66d9ef">else</span>  {
+         clip.x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+         clip.y <span style="color:#f92672">=</span> clip.y <span style="color:#f92672">+</span> TILE_WIDTH;
       }
    }
 }
-</code></pre>
-
-<p>My decision to use a vector of structures is derived from a desire to implement a more efficient container than STL’s std::map, at least for my purposes. This solution is workable without being overly complex, and provides a foundation for future explorations of the concept. On a different project with more constraints, a static cast might incur more overhead than would be acceptable. In this case, O(n) for the number of sprites is a small price to pay during the initialization phase.</p>
-
-<pre><code class="language-c++">void ResourceManager_c::renderSpriteAt(
-   Sprite_e sprite_id, const std::pair&lt;int, int&gt;&amp; screen_tile_coord, double degrees)
+</code></pre></div><p>My decision to use a vector of structures is derived from a desire to implement a more efficient container than STL’s std::map, at least for my purposes. This solution is workable without being overly complex, and provides a foundation for future explorations of the concept. On a different project with more constraints, a static cast might incur more overhead than would be acceptable. In this case, O(n) for the number of sprites is a small price to pay during the initialization phase.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">void</span> ResourceManager_c<span style="color:#f92672">:</span><span style="color:#f92672">:</span>renderSpriteAt(
+   Sprite_e sprite_id, <span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>pair<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> screen_tile_coord, <span style="color:#66d9ef">double</span> degrees)
 {
    SDL_Rect dest_rect;
-   if (sprite_id != BOARD) {  
-      dest_rect = { 
-         screen_tile_coord.first * TILE_WIDTH, 
-         screen_tile_coord.second * TILE_WIDTH,
+   <span style="color:#66d9ef">if</span> (sprite_id <span style="color:#f92672">!</span><span style="color:#f92672">=</span> BOARD) {  
+      dest_rect <span style="color:#f92672">=</span> { 
+         screen_tile_coord.first <span style="color:#f92672">*</span> TILE_WIDTH, 
+         screen_tile_coord.second <span style="color:#f92672">*</span> TILE_WIDTH,
          TILE_WIDTH, 
          TILE_WIDTH
       };
 
-      std::vector&lt;Sprite_s&gt;::iterator it;
-      for (it = mSprites.begin(); it != mSprites.end(); ++it)
+      std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>Sprite_s<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator it;
+      <span style="color:#66d9ef">for</span> (it <span style="color:#f92672">=</span> mSprites.begin(); it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> mSprites.end(); <span style="color:#f92672">+</span><span style="color:#f92672">+</span>it)
       {
-         if (it-&gt;mSpriteId == sprite_id) {
+         <span style="color:#66d9ef">if</span> (it<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>mSpriteId <span style="color:#f92672">=</span><span style="color:#f92672">=</span> sprite_id) {
             gSpritesheetTexture.render(
-               gRenderer, &amp;dest_rect, &amp;it-&gt;mClip, degrees);
+               gRenderer, <span style="color:#f92672">&amp;</span>dest_rect, <span style="color:#f92672">&amp;</span>it<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>mClip, degrees);
          }
       }
    }
-   else { // special case for drawing the board
-      dest_rect = {
-         (screen_tile_coord.first * TILE_WIDTH) - BORDER_WIDTH,
-         (screen_tile_coord.second * TILE_WIDTH) - BORDER_WIDTH,
-         (BORDER_WIDTH * 2) + (TILE_WIDTH * 9),
-         (BORDER_WIDTH * 2) + (TILE_WIDTH * 9)
+   <span style="color:#66d9ef">else</span> { <span style="color:#75715e">// special case for drawing the board
+</span><span style="color:#75715e"></span>      dest_rect <span style="color:#f92672">=</span> {
+         (screen_tile_coord.first <span style="color:#f92672">*</span> TILE_WIDTH) <span style="color:#f92672">-</span> BORDER_WIDTH,
+         (screen_tile_coord.second <span style="color:#f92672">*</span> TILE_WIDTH) <span style="color:#f92672">-</span> BORDER_WIDTH,
+         (BORDER_WIDTH <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span> (TILE_WIDTH <span style="color:#f92672">*</span> <span style="color:#ae81ff">9</span>),
+         (BORDER_WIDTH <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span> (TILE_WIDTH <span style="color:#f92672">*</span> <span style="color:#ae81ff">9</span>)
       };
 
-      gBoardTexture.render(gRenderer, &amp;dest_rect, NULL, degrees);
+      gBoardTexture.render(gRenderer, <span style="color:#f92672">&amp;</span>dest_rect, NULL, degrees);
    }
 }
-</code></pre>
-
-<pre><code class="language-c++">void LTexture::render(SDL_Renderer* renderer, SDL_Rect* dest_rect, 
-                      SDL_Rect* clip, double degrees)
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">void</span> LTexture<span style="color:#f92672">:</span><span style="color:#f92672">:</span>render(SDL_Renderer<span style="color:#f92672">*</span> renderer, SDL_Rect<span style="color:#f92672">*</span> dest_rect, 
+                      SDL_Rect<span style="color:#f92672">*</span> clip, <span style="color:#66d9ef">double</span> degrees)
 {
-   if (mTexture == NULL) {
-      printf(&quot;Missing Texture Error!&quot;);
+   <span style="color:#66d9ef">if</span> (mTexture <span style="color:#f92672">=</span><span style="color:#f92672">=</span> NULL) {
+      printf(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Missing Texture Error!</span><span style="color:#e6db74">&#34;</span>);
    }
-   else {
-      if (degrees != 0) {
+   <span style="color:#66d9ef">else</span> {
+      <span style="color:#66d9ef">if</span> (degrees <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) {
          SDL_RenderCopyEx(
             renderer, mTexture, clip, dest_rect, degrees, NULL, SDL_FLIP_NONE);
       }
-      else {
+      <span style="color:#66d9ef">else</span> {
          SDL_RenderCopy(renderer, mTexture, clip, dest_rect);
       }
    }
 }
-</code></pre>
-
-<p>With my assets properly loaded and structured, I still needed a way for the main game loop to interface with the ResourceManager class. To this end, I finally began to write a rendering algorithm. SDL’s render function must be passed the raw SDL_Texture pointer on invocation, so calling it from within LTexture is required. However, since the main game loop can’t directly access the LTexture class, another function is needed to mediate between the two. The ResourceManager_c’s renderSpriteAt() method serves this purpose, determining what to pass before LTexture’s own render() takes over. The ‘degrees’ parameter defaults to zero for both routines, making for a much more flexible function call overall.</p>
-
+</code></pre></div><p>With my assets properly loaded and structured, I still needed a way for the main game loop to interface with the ResourceManager class. To this end, I finally began to write a rendering algorithm. SDL’s render function must be passed the raw SDL_Texture pointer on invocation, so calling it from within LTexture is required. However, since the main game loop can’t directly access the LTexture class, another function is needed to mediate between the two. The ResourceManager_c’s renderSpriteAt() method serves this purpose, determining what to pass before LTexture’s own render() takes over. The ‘degrees’ parameter defaults to zero for both routines, making for a much more flexible function call overall.</p>
 <p>That about wraps up my discussion of the graphics module built for my Standoff application. Overall, this &ldquo;unit&rdquo; served as the foundation for my future forays into windowing and graphics management, with SDL2 as my current framework of choice when working with OpenGL, as opposed to GLFW or GLUT. I have worked with GLUT in the past and felt that it obscured too much of the core loop functionality for use in anything other than pure graphical simulations.</p>
 
 </main>
@@ -352,13 +325,13 @@ void LTexture::free()
       <div class="container">
 
       <div class="copyright">
-        Copyright © 2017 Will Gueble. All Rights Reserved.
+        Copyright © 2020 Zade Gueble. All Rights Reserved.
       </div>
 
       <div class="icons">
 
         
-           <a href="mailto:will.gueble@gmail.com">
+           <a href="mailto:zade.gueble@gmail.com">
               <img class="icon" src="https://grueble.github.io/img/email.svg" alt="email" />
            </a>
         
@@ -370,7 +343,7 @@ void LTexture::free()
         
   
         
-           <a href="https://www.linkedin.com/in/will-gueble-2b0b8850" target="_blank">
+           <a href="https://www.linkedin.com/in/zade-gueble-2b0b8850" target="_blank">
               <img class="icon" src="https://grueble.github.io/img/linkedin.svg" alt="linkedin" />
            </a>
         

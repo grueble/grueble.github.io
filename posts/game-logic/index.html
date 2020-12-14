@@ -15,7 +15,7 @@
     <meta name="description" content="Blog &amp; Portfolio Website">
     
 
-    <title>Game Logic | Will Gueble</title>
+    <title>Game Logic | Zade Gueble</title>
 
     <link rel="stylesheet" href="https://grueble.github.io/css/style.css" />
     <link rel="stylesheet" href="https://grueble.github.io/css/fonts.css" />
@@ -31,7 +31,7 @@
       
       
       <li class="pull-left ">
-        <a href="https://grueble.github.io/">/home/will gueble</a>
+        <a href="https://grueble.github.io/">/home/zade gueble</a>
       </li>
       
       
@@ -112,103 +112,89 @@
 
 <main>
    <p>In order to capture all of the capabilities outlined in my design, I began development with a ‘Piece’ class to handle ownership of all the relevant spatial and qualitative traits. This class is responsible for executing all actions available to pieces, and provides a layer of protection for critical data about the game’s state - piece’s are only accessed or altered through the available public methods.</p>
-
 <p>The Standoff project was my first foray into memory management on such a large scale, so I wanted to use it as an opportunity to experiment with different techniques for encapsulating the lifetime of an object. I struggled for a regrettably long time with misplaced attempts to represent the pieces as a vector of pointers, but these proved futile in the long run. I settled on using STL’s smart pointers, introduced in C++11. Although this option is syntactically quite elegant, it’s inefficiency makes it less than ideal for use in game applications. Luckily, Standoff is lightweight enough that performance maximization was unnecessary; in the future I would return to this problem for an exercise in measuring and improving my game’s boot time. [1]</p>
-
 <p>One of the perks of the piece-centric approach is the ability to get by without any concept of a ‘Player’. Almost all data about the game is described by two vectors containing all of the pieces - one for each player. There is no need for a concept of a persistent user either; each ‘Player’ exists only as a collection of associated pieces. In the networked version of the game, a particular game client is tied to a set of pieces based on the order in which it enters the game, with the game creator always controlling the collection labelled as “Player 1”. As a bonus, this meant that I could enable online play without having to set up a database to manage users and their data, nor would i have to invest in securing this data from outside attacks.</p>
-
-<hr>
-
-<p><img src="https://grueble.github.io/img/standoff-move.gif" alt="Move" /></p>
-
+<!-- raw HTML omitted -->
+<p><img src="https://grueble.github.io/img/standoff-move.gif" alt="Move"></p>
 <p>With the pieces defined and initialized, I began work on algorithms for the fundamental actions available to a player on their turn - move, deploy, rotate, and shootout. As a deployment is just a special case of the move action, I was able to condense these capabilities down into three methods. Of the three, the shootout function is the most notable; both Game_c::move() and rotate() simply serve to validate and store any relevant data about the move, before passing it along to the piece in question.</p>
-
-<p><img src="https://grueble.github.io/img/standoff-rotate.gif" alt="Rotate" /></p>
-
+<p><img src="https://grueble.github.io/img/standoff-rotate.gif" alt="Rotate"></p>
 <p>Shootout, on the other hand, is a whole different beast. By far the most complicated subroutine of the game’s core mechanics, I decided to split the functionality of a shootout into two separate functions, Game_c::shootout and detectHit.</p>
-
-<pre><code class="language-c++">void shootout() {
-   std::vector&lt;PiecePtr&gt; live_pieces;
-   std::vector&lt;PiecePtr&gt; hit_pieces;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">shootout</span>() {
+   std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span> live_pieces;
+   std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span> hit_pieces;
    
-   std::vector&lt;PiecePtr&gt;::iterator p1_it;
-   for (p1_it = mPlayer1Pieces.begin(); p1_it != mPlayer1Pieces.end(); ++p1_it)
+   std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator p1_it;
+   <span style="color:#66d9ef">for</span> (p1_it <span style="color:#f92672">=</span> mPlayer1Pieces.begin(); p1_it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> mPlayer1Pieces.end(); <span style="color:#f92672">+</span><span style="color:#f92672">+</span>p1_it)
    {
-      if ((*p1_it)-&gt;getPlayState() == Piece_n::LIVE)
+      <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>p1_it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPlayState() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>LIVE)
       {
-         live_pieces.push_back(*p1_it);
+         live_pieces.push_back(<span style="color:#f92672">*</span>p1_it);
       }
    }
    
-   // copy construct pointers to Player 2's live pieces...
-   
-   std::vector&lt;PiecePtr&gt;::iterator it;
-   for (it = live_pieces.begin(); it != live_pieces.end(); ++it)
+   <span style="color:#75715e">// copy construct pointers to Player 2&#39;s live pieces...
+</span><span style="color:#75715e"></span>   
+   std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator it;
+   <span style="color:#66d9ef">for</span> (it <span style="color:#f92672">=</span> live_pieces.begin(); it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> live_pieces.end(); <span style="color:#f92672">+</span><span style="color:#f92672">+</span>it)
    {
-      if ((*it)-&gt;getPieceType() != Piece_n::PAWN)
+      <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPieceType() <span style="color:#f92672">!</span><span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>PAWN)
       {
-         Piece_n::Direction_e direction = (*it)-&gt;getDirection();
-         detectHit2(**it, direction, live_pieces);
+         Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Direction_e direction <span style="color:#f92672">=</span> (<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getDirection();
+         detectHit2(<span style="color:#f92672">*</span><span style="color:#f92672">*</span>it, direction, live_pieces);
    
-         if ((*it)-&gt;getPieceType() == Piece_n::SLINGER)
+         <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPieceType() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>SLINGER)
          {
-            Piece_n::Direction_e secondary_direction;
-            switch(direction)
+            Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Direction_e secondary_direction;
+            <span style="color:#66d9ef">switch</span>(direction)
             {
-               case Piece_n::UP : { secondary_direction = Piece_n::RIGHT; }
-               case Piece_n::DOWN : { secondary_direction = Piece_n::LEFT; }
-               case Piece_n::LEFT : { secondary_direction = Piece_n::UP; }
-               case Piece_n::RIGHT : { secondary_direction = Piece_n::DOWN; }
+               <span style="color:#66d9ef">case</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>UP : { secondary_direction <span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>RIGHT; }
+               <span style="color:#66d9ef">case</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>DOWN : { secondary_direction <span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>LEFT; }
+               <span style="color:#66d9ef">case</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>LEFT : { secondary_direction <span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>UP; }
+               <span style="color:#66d9ef">case</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>RIGHT : { secondary_direction <span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>DOWN; }
             }
-            detectHit2(**it, secondary_direction, live_pieces);
+            detectHit2(<span style="color:#f92672">*</span><span style="color:#f92672">*</span>it, secondary_direction, live_pieces);
          } } } }
-</code></pre>
+</code></pre></div><p>Since a shootout can be initiated by either player during their turn, the shootout function is necessarily player agnostic. A record of all pieces hit during the process is stored as a vector of pairs of the form ( Player #, Index ), where the index is such that it can be passed to the vector::at function to return the corresponding piece for the corresponding player. However, I still needed an algorithm to realize this formulation as my proof of correctness.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">// method declaration
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> Game_c<span style="color:#f92672">:</span><span style="color:#f92672">:</span>detectHit2(Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Piece_c<span style="color:#f92672">&amp;</span> piece, 
+                        Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Direction_e direction,
+                        std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> pieces)
 
-<p>Since a shootout can be initiated by either player during their turn, the shootout function is necessarily player agnostic. A record of all pieces hit during the process is stored as a vector of pairs of the form ( Player #, Index ), where the index is such that it can be passed to the vector::at function to return the corresponding piece for the corresponding player. However, I still needed an algorithm to realize this formulation as my proof of correctness.</p>
-
-<pre><code class="language-c++">// method declaration
-void Game_c::detectHit2(Piece_n::Piece_c&amp; piece, 
-                        Piece_n::Direction_e direction,
-                        std::vector&lt;PiecePtr&gt;&amp; pieces)
-
-std::vector&lt;PiecePtr&gt;::iterator it;
-for (it = pieces.begin(); it != pieces.end(); ++it)
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator it;
+<span style="color:#66d9ef">for</span> (it <span style="color:#f92672">=</span> pieces.begin(); it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> pieces.end(); <span style="color:#f92672">+</span><span style="color:#f92672">+</span>it)
 { 
-   switch (direction)
+   <span style="color:#66d9ef">switch</span> (direction)
    {
-      case Piece_n::UP :
+      <span style="color:#66d9ef">case</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>UP :
       {
-         std::vector&lt;PiecePtr&gt;::iterator it;
-         for (it = pieces.begin(); it != pieces.end(); ++it)
+         std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>PiecePtr<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator it;
+         <span style="color:#66d9ef">for</span> (it <span style="color:#f92672">=</span> pieces.begin(); it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> pieces.end(); <span style="color:#f92672">+</span><span style="color:#f92672">+</span>it)
          {
-            if ((*it)-&gt;getPlayState() == Piece_n::LIVE)
+            <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPlayState() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> Piece_n<span style="color:#f92672">:</span><span style="color:#f92672">:</span>LIVE)
             {
-               if ((*it)-&gt;getPosition().first == piece.getPosition().first &amp;&amp;
-                   (*it)-&gt;getPosition().second &lt; piece.getPosition().second)
+               <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPosition().first <span style="color:#f92672">=</span><span style="color:#f92672">=</span> piece.getPosition().first <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
+                   (<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPosition().second <span style="color:#f92672">&lt;</span> piece.getPosition().second)
                {
-                  if (hit_piece_flag &amp;&amp;
-                     (*it)-&gt;getPosition().second &gt; hit_piece-&gt;getPosition().second) {
-                     hit_piece = *it;
+                  <span style="color:#66d9ef">if</span> (hit_piece_flag <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
+                     (<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPosition().second <span style="color:#f92672">&gt;</span> hit_piece<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getPosition().second) {
+                     hit_piece <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>it;
                   }
-                  else {
-                     hit_piece = *it;
-                     hit_piece_flag = true;
+                  <span style="color:#66d9ef">else</span> {
+                     hit_piece <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>it;
+                     hit_piece_flag <span style="color:#f92672">=</span> true;
                   } } } }
-         break;
+         <span style="color:#66d9ef">break</span>;
       }
-      // cases for all possible piece directions...
-   } 
+      <span style="color:#75715e">// cases for all possible piece directions...
+</span><span style="color:#75715e"></span>   } 
 }
 
-if (piece.getTeam() != hit_piece-&gt;getTeam())
+<span style="color:#66d9ef">if</span> (piece.getTeam() <span style="color:#f92672">!</span><span style="color:#f92672">=</span> hit_piece<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>getTeam())
 {
-   hit_piece-&gt;nextPlayState();
+   hit_piece<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>nextPlayState();
 }
-</code></pre>
-
-<p>To this end, I wrote the detectHit method, a helper for the more generalized shootout process. During each iteration of the shootout method, detectHit is called if and only if the piece is both in play and capable of shooting. This function takes a reference to a piece, a firing direction, and a reference to a list of pieces to check for a collision. Using this information, it draws a collision ray in the desired direction, checking for hits with each of the pieces stored in the list parameter. This list is determined by the shootout function, which passes the piece vector belonging to the shooter’s opponent. To account for the possibility of multiple hits in the same direction, the detectHit routine only returns the index of the nearest hit piece, determined by an absolute value comparison along each piece’s relevant axis. In case the shooting piece is a ‘slinger’ - the type of piece capable of firing in two directions - a second call is made to detectHit, passing the piece’s secondary direction instead. In the final step of the process, the shootout algorithm sets each of the hit pieces to the ‘DEAD’ play state, rendering them invisible to the application for all intensive purposes.</p>
-
-<p><img src="https://grueble.github.io/img/standoff-shootout.gif" alt="Shootout" /></p>
+</code></pre></div><p>To this end, I wrote the detectHit method, a helper for the more generalized shootout process. During each iteration of the shootout method, detectHit is called if and only if the piece is both in play and capable of shooting. This function takes a reference to a piece, a firing direction, and a reference to a list of pieces to check for a collision. Using this information, it draws a collision ray in the desired direction, checking for hits with each of the pieces stored in the list parameter. This list is determined by the shootout function, which passes the piece vector belonging to the shooter’s opponent. To account for the possibility of multiple hits in the same direction, the detectHit routine only returns the index of the nearest hit piece, determined by an absolute value comparison along each piece’s relevant axis. In case the shooting piece is a ‘slinger’ - the type of piece capable of firing in two directions - a second call is made to detectHit, passing the piece’s secondary direction instead. In the final step of the process, the shootout algorithm sets each of the hit pieces to the ‘DEAD’ play state, rendering them invisible to the application for all intensive purposes.</p>
+<p><img src="https://grueble.github.io/img/standoff-shootout.gif" alt="Shootout"></p>
 
 </main>
 
@@ -249,13 +235,13 @@ if (piece.getTeam() != hit_piece-&gt;getTeam())
       <div class="container">
 
       <div class="copyright">
-        Copyright © 2017 Will Gueble. All Rights Reserved.
+        Copyright © 2020 Zade Gueble. All Rights Reserved.
       </div>
 
       <div class="icons">
 
         
-           <a href="mailto:will.gueble@gmail.com">
+           <a href="mailto:zade.gueble@gmail.com">
               <img class="icon" src="https://grueble.github.io/img/email.svg" alt="email" />
            </a>
         
@@ -267,7 +253,7 @@ if (piece.getTeam() != hit_piece-&gt;getTeam())
         
   
         
-           <a href="https://www.linkedin.com/in/will-gueble-2b0b8850" target="_blank">
+           <a href="https://www.linkedin.com/in/zade-gueble-2b0b8850" target="_blank">
               <img class="icon" src="https://grueble.github.io/img/linkedin.svg" alt="linkedin" />
            </a>
         

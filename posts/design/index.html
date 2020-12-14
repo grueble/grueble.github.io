@@ -15,7 +15,7 @@
     <meta name="description" content="Blog &amp; Portfolio Website">
     
 
-    <title>Design | Will Gueble</title>
+    <title>Design | Zade Gueble</title>
 
     <link rel="stylesheet" href="https://grueble.github.io/css/style.css" />
     <link rel="stylesheet" href="https://grueble.github.io/css/fonts.css" />
@@ -31,7 +31,7 @@
       
       
       <li class="pull-left ">
-        <a href="https://grueble.github.io/">/home/will gueble</a>
+        <a href="https://grueble.github.io/">/home/zade gueble</a>
       </li>
       
       
@@ -112,23 +112,21 @@
 
 <main>
    <p>I asked <a href="http://milobeckman.com/home.html">Milo Beckman</a> to provide a brief discussion of his design goals for Standoff.</p>
-
 <blockquote>
 <p>The original idea for Standoff was to make a game that was cross between chess and a scene in an action movie where a bunch of people are pointing guns at each other.</p>
-
+</blockquote>
+<blockquote>
 <p>I was playing a game of chess where no pieces were captured for a very long time, and I thought it was cool how the strategy was oriented around the possibility of capture even though no captures were happening. This inspired me to make a game where the significant event (a shootout) only took place a few times per game, and the rest of the game was strategizing about that possibility. A natural fit for this seemed to be a &ldquo;Mexican standoff,&rdquo; like in a Tarantino movie, where you have to think about who would get shot if all the guns went off.</p>
-
+</blockquote>
+<blockquote>
 <p>I added the briefcase as the goal because (1) if the aim was just to kill the other player&rsquo;s pieces, it was too easy to quickly end in a draw; and (2) I liked the possibility that a full game could be played without the guns ever being shot. I upgraded to a 9x9 board (from an 8x8 chess board) to accommodate the briefcase in the middle. I originally wanted to have the pieces start in a predetermined position, like in chess, but decided it would be cleaner to have doors for deployment. The final arrangement of doors was actually the first one I tried, and it worked relatively well in playtests.</p>
-
+</blockquote>
+<blockquote>
 <p>The final problem I encountered was that it was too easy to force a draw by picking off pieces one at a time. This is why I added the double-shooter, which created possibilities for strategically forcing a 2-1 shootout and made it harder to tell whether a shootout was worth it given the different values of the pieces. It seemed natural that the double-shooters wouldn&rsquo;t be able to pick up the briefcase.</p>
 </blockquote>
-
-<p><embed src="https://grueble.github.io/img/Standoff.pdf" width="640x" height="800px" /></p>
-
-<hr>
-
+<p><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
 <p>The game was constructed according to the above design document, provided to me by Milo in November of 2016. I tried to stick to the document as best as possible when developing the first draft of the application.</p>
-
 <p>Early in the design process, I turned to the chess programming community for inspiration on how to structure my game’s logic. I quickly encountered a slew of different strategies, but the debate between piece-based vs. board-based representation caught my eye. In the former, data about the game state is stored as a collection of pieces; in the latter, the data is formatted as a 2D array of tiles. Both options provide a similar degree of expressiveness and flexibility, so the decision came down to contextual requirements in the end. I chose a piece-based style in order to more readily describe the functionality of a shootout - the projectile collision properties of a shootout are benefitted by a piece-first mentality. Under this formulation, the outcome of a shootout can be calculated using hit detection rays originating from each live piece. The decision to implement a piece-centric back-end became the foundation for my approach to the entire game&rsquo;s development.</p>
 
 </main>
@@ -161,13 +159,13 @@
       <div class="container">
 
       <div class="copyright">
-        Copyright © 2017 Will Gueble. All Rights Reserved.
+        Copyright © 2020 Zade Gueble. All Rights Reserved.
       </div>
 
       <div class="icons">
 
         
-           <a href="mailto:will.gueble@gmail.com">
+           <a href="mailto:zade.gueble@gmail.com">
               <img class="icon" src="https://grueble.github.io/img/email.svg" alt="email" />
            </a>
         
@@ -179,7 +177,7 @@
         
   
         
-           <a href="https://www.linkedin.com/in/will-gueble-2b0b8850" target="_blank">
+           <a href="https://www.linkedin.com/in/zade-gueble-2b0b8850" target="_blank">
               <img class="icon" src="https://grueble.github.io/img/linkedin.svg" alt="linkedin" />
            </a>
         
