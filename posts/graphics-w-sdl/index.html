@@ -204,7 +204,7 @@ LTexture<span style="color:#f92672">:</span><span style="color:#f92672">:</span>
    }
 }
 </code></pre></div><p>The loadFromFile() and free() methods serve to control the life cycle of LTexture’s owned SDL_Texture object. The former is invoked by the ResourceManager in order to initialize the desired textures that are to be stored as member variables. The latter is called in the destructor, ensuring that the object is destroyed upon going out of scope. These routines leverage SDL_image (SDL_image 2.0 | <a href="https://www.libsdl.org/projects/SDL_image/),">https://www.libsdl.org/projects/SDL_image/),</a> an image file loading library built as an extension to the base SDL library. IMG_LoadTexture() in particular is taken from the SDL_image library; the method is dynamically loaded at runtime based on an associated .dll file, and can be configured to handle files of many of the most common image file types. The flexibility provided by this library was one of the many reasons why I chose to use SDL in the first place.</p>
-<!-- raw HTML omitted -->
+<hr>
 <p><img src="https://grueble.github.io/img/graphics_w_sdl_04.png" alt="Spritesheet"></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Sprite_s</span>
 {

@@ -124,8 +124,8 @@
 <blockquote>
 <p>The final problem I encountered was that it was too easy to force a draw by picking off pieces one at a time. This is why I added the double-shooter, which created possibilities for strategically forcing a 2-1 shootout and made it harder to tell whether a shootout was worth it given the different values of the pieces. It seemed natural that the double-shooters wouldn&rsquo;t be able to pick up the briefcase.</p>
 </blockquote>
-<p><!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
+<p><embed src="https://grueble.github.io/img/Standoff.pdf" width="640x" height="800px" /></p>
+<hr>
 <p>The game was constructed according to the above design document, provided to me by Milo in November of 2016. I tried to stick to the document as best as possible when developing the first draft of the application.</p>
 <p>Early in the design process, I turned to the chess programming community for inspiration on how to structure my game’s logic. I quickly encountered a slew of different strategies, but the debate between piece-based vs. board-based representation caught my eye. In the former, data about the game state is stored as a collection of pieces; in the latter, the data is formatted as a 2D array of tiles. Both options provide a similar degree of expressiveness and flexibility, so the decision came down to contextual requirements in the end. I chose a piece-based style in order to more readily describe the functionality of a shootout - the projectile collision properties of a shootout are benefitted by a piece-first mentality. Under this formulation, the outcome of a shootout can be calculated using hit detection rays originating from each live piece. The decision to implement a piece-centric back-end became the foundation for my approach to the entire game&rsquo;s development.</p>
 

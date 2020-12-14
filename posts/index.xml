@@ -18,7 +18,7 @@
       
       <guid>https://grueble.github.io/posts/humble-beginnings/</guid>
       <description>I wanted to mark this moment as my first major milestone on the way to a completed game.
-Each unique image displayed on screen belongs to a managed game object, with seperate components to handle input, physics, and graphics. In the future, any sound effects or music will be handled by an audio component attached in a similar fashion. The component design pattern was a tip from the Robert Nystrom&amp;rsquo;s Game Programming Patterns.</description>
+Each unique image displayed on screen belongs to a managed game object, with seperate components to handle input, physics, and graphics. In the future, any sound effects or music will be handled by an audio component attached in a similar fashion. The component design pattern was a tip from the Robert Nystrom&amp;rsquo;s Game Programming Patterns.</description>
     </item>
     
     <item>

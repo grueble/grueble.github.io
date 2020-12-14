@@ -133,7 +133,7 @@ std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>memcp
    mSocket.receive(from_address, packet, MAX_PACKET_SIZE <span style="color:#f92672">+</span> HEADER_SIZE);
 std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>memcpy(data, <span style="color:#f92672">&amp;</span>packet[HEADER_SIZE], MAX_PACKET_SIZE);
 </code></pre></div><p>I divided my networking module into three parts: at the top-level, the ‘ConnectHandler’ class presides over startup and shutdown of the connection process, in addition to performing a set of serialization and deserialization transformations on every sent message. A ConnectHandler_c object owns an ‘LSocket’, a wrapper class designed in the style of the ‘LTexture’ class used in my project’s graphics module. An LSocket contains platform-specific implementations for the raw network socket, and encapsulates the socket’s life cycle as well as capabilities such as sending and receiving. Last but not least is the ‘Address’ class, which stores any data required to connect with a particular device - be it client or server. Development for each of these parts relied in no small part on the aforementioned tutorials by Fiedler. His posts are more informative than anything I could write on the subject, with the first two entries of his <em>Networking for Game Programmers</em> series proving the most informative.</p>
-<!-- raw HTML omitted -->
+<hr>
 <p><img src="https://grueble.github.io/img/standoff-server-output.gif" alt="Server Output"></p>
 <p>The next step of my development process involved the construction of both client and server endpoints for my networking pipeline. These new modules were designed to leverage the completed ConnectHandler_c in order to establish a network connection between two separate instances of the Standoff application. ???</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">Request_e</span>
@@ -164,7 +164,7 @@ std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>memcp
 </li>
 </ul>
 <p>Available actions correspond with the enumerators of Request_e, with the exception of the INVALID request identifier.</p>
-<!-- raw HTML omitted -->
+<hr>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">// from: StandoffApp_c::update()
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">switch</span> (mCurrentGame.getCurrentMove().mCurrentAction)
 {
@@ -224,7 +224,7 @@ std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>memcp
          mCurrentGame.nextPlayer();
          <span style="color:#66d9ef">break</span>;
       } } }
-</code></pre></div><!-- raw HTML omitted -->
+</code></pre></div><hr>
 <p>Given the types of issues common to most networked multiplayer games, I was understandably worried about the security of my application, especially because of my intent to distribute Standoff amongst my friends. Based on my decision to use a bit buffer for message transmission, my main concern was the possibility of a buffer overflow allowing for an attacker to seize control of the program’s execution. [3]</p>
 
 </main>

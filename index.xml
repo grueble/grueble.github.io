@@ -18,7 +18,7 @@
       
       <guid>https://grueble.github.io/posts/humble-beginnings/</guid>
       <description>I wanted to mark this moment as my first major milestone on the way to a completed game.
-Each unique image displayed on screen belongs to a managed game object, with seperate components to handle input, physics, and graphics. In the future, any sound effects or music will be handled by an audio component attached in a similar fashion. The component design pattern was a tip from the Robert Nystrom&amp;rsquo;s Game Programming Patterns.</description>
+Each unique image displayed on screen belongs to a managed game object, with seperate components to handle input, physics, and graphics. In the future, any sound effects or music will be handled by an audio component attached in a similar fashion. The component design pattern was a tip from the Robert Nystrom&amp;rsquo;s Game Programming Patterns.</description>
     </item>
     
     <item>
@@ -104,11 +104,9 @@ More recently, I developed a modest game application, complete with command line
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://grueble.github.io/resume/</guid>
-      <description>Zade Gueble Download: pdf Overview A self-motivated Software Engineer with a passion for developing interactive graphical applications of all kinds. Demonstrated success transforming design goals into implementation details across a variety of projects. Outstanding communication and interpersonal skills..
-Education Wesleyan University| Middletown, CT| 2011 – 2015
-Skills Experience Software Engineer| SRC Inc.| Dec. 2015 – Jan. 2017
-QA Tester| Undead Labs| Summers 2014, 2015
-Back End Development Intern| Viget Labs| Summer 2013</description>
+      <description>Zade Gueble Download: pdf Overview A self-motivated Software Engineer with a passion for developing interactive graphical applications of all kinds. Demonstrated success transforming design goals into implementation details across a variety of projects. Outstanding communication and interpersonal skills..
+Education Wesleyan University | Middletown, CT | 2011 – 2015
+Earned a Bachelor of Arts, double majoring in Computer Science and Philosophy, GPA: 3.5Selected Undergraduate Coursework: Computer Graphics, Algorithms and Complexity, Automata Theory, Computer Structure, Data Structures, Vectors &amp; Matrices, Writing About Video GamesSkills Languages: C++ (&#39;11/&#39;14), Java, C#, Bash, Ruby, Python, make, GLSL, C (&#39;99), HTML, CSS, YAML, XMLTechnologies: OpenGL (2.</description>
     </item>
     
   </channel>
